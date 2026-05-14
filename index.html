@@ -14,7 +14,7 @@
 
     .container{
       max-width:420px;
-      margin:40px auto;
+      margin:35px auto;
       background:white;
       padding:25px;
       border-radius:20px;
@@ -25,6 +25,11 @@
       text-align:center;
       color:#ff9800;
       margin-bottom:8px;
+    }
+
+    h2{
+      text-align:center;
+      color:#ff9800;
     }
 
     p{
@@ -55,7 +60,10 @@
     }
 
     .register{ background:#4caf50; }
+    .staff{ background:#2196f3; }
+    .boss{ background:#9c27b0; }
     .logout{ background:#777; }
+
     .card{
       background:#fff7e6;
       padding:20px;
@@ -73,22 +81,32 @@
     .hidden{
       display:none;
     }
+
+    .small{
+      font-size:13px;
+      color:#777;
+      line-height:1.5;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- Login Page -->
   <div class="container" id="loginPage">
     <h1>Milk Tea Demo</h1>
     <p>Wonderful Pineapple Point System</p>
 
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Password">
+    <input type="email" id="loginEmail" placeholder="Customer Email">
+    <input type="password" id="loginPassword" placeholder="Customer Password">
 
-    <button onclick="login()">Login</button>
+    <button onclick="login()">Customer Login</button>
     <button class="register" onclick="registerMember()">Register Member</button>
+    <button class="staff" onclick="showStaffLogin()">Staff Panel</button>
+    <button class="boss" onclick="showBossLogin()">Boss Panel</button>
   </div>
 
+  <!-- Member Dashboard -->
   <div class="container hidden" id="dashboardPage">
     <h1>Member Dashboard</h1>
     <p id="welcomeText"></p>
@@ -98,7 +116,60 @@
       <div class="points" id="pointsText">0</div>
     </div>
 
-    <p id="memberInfo"></p>
+    <p class="small" id="memberInfo"></p>
+
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Staff Login -->
+  <div class="container hidden" id="staffLoginPage">
+    <h2>Staff Login</h2>
+    <input type="password" id="staffPassword" placeholder="Staff Password">
+    <button class="staff" onclick="staffLogin()">Login Staff</button>
+    <button class="logout" onclick="backToLogin()">Back</button>
+  </div>
+
+  <!-- Staff Panel -->
+  <div class="container hidden" id="staffPage">
+    <h2>Staff Add Points</h2>
+    <p>RM1 = 1 Point</p>
+
+    <input type="email" id="customerEmail" placeholder="Customer Email">
+    <input type="number" id="amountSpent" placeholder="Amount Spent RM">
+
+    <button class="staff" onclick="addPoints()">Add Points</button>
+
+    <div class="card hidden" id="staffResult">
+      <p id="staffCustomerName"></p>
+      <div class="points" id="staffCustomerPoints">0</div>
+      <p>Total Points</p>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Boss Login -->
+  <div class="container hidden" id="bossLoginPage">
+    <h2>Boss Login</h2>
+    <input type="password" id="bossPassword" placeholder="Boss Password">
+    <button class="boss" onclick="bossLogin()">Login Boss</button>
+    <button class="logout" onclick="backToLogin()">Back</button>
+  </div>
+
+  <!-- Boss Panel -->
+  <div class="container hidden" id="bossPage">
+    <h2>Boss Modify Points</h2>
+
+    <input type="email" id="bossCustomerEmail" placeholder="Customer Email">
+    <input type="number" id="bossNewPoints" placeholder="Set New Points">
+
+    <button class="boss" onclick="setPoints()">Update Points</button>
+
+    <div class="card hidden" id="bossResult">
+      <p id="bossCustomerName"></p>
+      <div class="points" id="bossCustomerPoints">0</div>
+      <p>Updated Points</p>
+    </div>
 
     <button class="logout" onclick="logout()">Logout</button>
   </div>
@@ -110,7 +181,8 @@
       getFirestore,
       doc,
       setDoc,
-      getDoc
+      getDoc,
+      updateDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -124,6 +196,25 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    function hideAll(){
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("dashboardPage").classList.add("hidden");
+      document.getElementById("staffLoginPage").classList.add("hidden");
+      document.getElementById("staffPage").classList.add("hidden");
+      document.getElementById("bossLoginPage").classList.add("hidden");
+      document.getElementById("bossPage").classList.add("hidden");
+    }
+
+    window.backToLogin = function(){
+      hideAll();
+      document.getElementById("loginPage").classList.remove("hidden");
+    }
+
+    window.logout = function(){
+      hideAll();
+      document.getElementById("loginPage").classList.remove("hidden");
+    }
 
     window.registerMember = async function(){
       let name = prompt("Enter Your Name");
@@ -167,7 +258,7 @@
         return;
       }
 
-      document.getElementById("loginPage").classList.add("hidden");
+      hideAll();
       document.getElementById("dashboardPage").classList.remove("hidden");
 
       document.getElementById("welcomeText").innerText = "Welcome, " + member.name;
@@ -176,9 +267,104 @@
         "Phone: " + member.phone + "\nEmail: " + member.email + "\nMember ID: " + member.memberId;
     }
 
-    window.logout = function(){
-      document.getElementById("dashboardPage").classList.add("hidden");
-      document.getElementById("loginPage").classList.remove("hidden");
+    window.showStaffLogin = function(){
+      hideAll();
+      document.getElementById("staffLoginPage").classList.remove("hidden");
+    }
+
+    window.staffLogin = function(){
+      let password = document.getElementById("staffPassword").value;
+
+      if(password === "staff123"){
+        hideAll();
+        document.getElementById("staffPage").classList.remove("hidden");
+      }else{
+        alert("Wrong staff password");
+      }
+    }
+
+    window.addPoints = async function(){
+      let email = document.getElementById("customerEmail").value;
+      let amount = Number(document.getElementById("amountSpent").value);
+
+      if(!email || !amount){
+        alert("Please enter customer email and amount");
+        return;
+      }
+
+      const docRef = doc(db, "members", email);
+      const docSnap = await getDoc(docRef);
+
+      if(!docSnap.exists()){
+        alert("Customer not found");
+        return;
+      }
+
+      let member = docSnap.data();
+      let pointsToAdd = Math.floor(amount);
+      let newPoints = Number(member.points) + pointsToAdd;
+
+      await updateDoc(docRef, {
+        points:newPoints
+      });
+
+      document.getElementById("staffResult").classList.remove("hidden");
+      document.getElementById("staffCustomerName").innerText =
+        member.name + " +" + pointsToAdd + " points";
+      document.getElementById("staffCustomerPoints").innerText = newPoints;
+
+      alert("Points added successfully!");
+    }
+
+    window.showBossLogin = function(){
+      hideAll();
+      document.getElementById("bossLoginPage").classList.remove("hidden");
+    }
+
+    window.bossLogin = function(){
+      let password = document.getElementById("bossPassword").value;
+
+      if(password === "boss123"){
+        hideAll();
+        document.getElementById("bossPage").classList.remove("hidden");
+      }else{
+        alert("Wrong boss password");
+      }
+    }
+
+    window.setPoints = async function(){
+      let email = document.getElementById("bossCustomerEmail").value;
+      let newPoints = Number(document.getElementById("bossNewPoints").value);
+
+      if(!email && email !== 0){
+        alert("Please enter customer email");
+        return;
+      }
+
+      if(isNaN(newPoints)){
+        alert("Please enter valid points");
+        return;
+      }
+
+      const docRef = doc(db, "members", email);
+      const docSnap = await getDoc(docRef);
+
+      if(!docSnap.exists()){
+        alert("Customer not found");
+        return;
+      }
+
+      let member = docSnap.data();
+
+      await updateDoc(docRef, {
+        points:newPoints
+      });
+
+      document.getElementById("bossResult").classList.remove("hidden");
+      document.getElementById("bossCustomerName").innerText = member.name;
+      document.getElementById("bossCustomerPoints").innerText = newPoints;
+
+      alert("Points updated successfully!");
     }
   </script>
 

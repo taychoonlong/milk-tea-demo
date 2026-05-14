@@ -7,7 +7,7 @@
 
   <style>
     body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
-    .container{max-width:480px;margin:25px auto;background:white;padding:22px;border-radius:20px;box-shadow:0 0 15px rgba(0,0,0,.1);}
+    .container{max-width:520px;margin:25px auto;background:white;padding:22px;border-radius:20px;box-shadow:0 0 15px rgba(0,0,0,.1);}
     h1,h2{text-align:center;color:#ff9800;}
     p{text-align:center;color:gray;}
     input,select{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;font-size:16px;box-sizing:border-box;}
@@ -20,47 +20,56 @@
     table{width:100%;border-collapse:collapse;font-size:13px;margin-top:15px;}
     th,td{border:1px solid #ddd;padding:7px;text-align:left;}
     th{background:#fff3d8;}
+    .topbar{max-width:520px;margin:15px auto;text-align:right;}
+    .topbar select{width:160px;background:white;}
   </style>
 </head>
 
 <body>
 
+<div class="topbar">
+  <select id="languageSelect" onchange="changeLanguage()">
+    <option value="en">English</option>
+    <option value="zh">中文</option>
+  </select>
+</div>
+
 <div class="container" id="loginPage">
   <h1>Milk Tea Demo</h1>
-  <p>Wonderful Pineapple Point System</p>
+  <p id="subtitle">Wonderful Pineapple Point System</p>
 
   <input type="text" id="loginPhone" placeholder="Customer Phone: 0123456789">
 
-  <button onclick="login()">Customer Login</button>
-  <button class="register" onclick="registerMember()">Register Member</button>
-  <button class="staff" onclick="showStaffLogin()">Staff Panel</button>
-  <button class="boss" onclick="showBossLogin()">Boss Panel</button>
+  <button onclick="login()" id="btnCustomerLogin">Customer Login</button>
+  <button class="register" onclick="registerMember()" id="btnRegister">Register Member</button>
+  <button class="staff" onclick="showStaffLogin()" id="btnStaff">Staff Panel</button>
+  <button class="boss" onclick="showBossLogin()" id="btnBoss">Boss Panel</button>
 </div>
 
 <div class="container hidden" id="dashboardPage">
-  <h1>Member Dashboard</h1>
+  <h1 id="memberDashboardTitle">Member Dashboard</h1>
   <p id="welcomeText"></p>
 
   <div class="card">
-    <p>Current Points</p>
+    <p id="currentPointsText">Current Points</p>
     <div class="points" id="pointsText">0</div>
   </div>
 
   <p class="small" id="memberInfo"></p>
   <button class="wa" id="memberWhatsappBtn">Open WhatsApp</button>
-  <button class="logout" onclick="logout()">Logout</button>
+  <button class="logout" onclick="logout()" id="btnLogout1">Logout</button>
 </div>
 
 <div class="container hidden" id="staffLoginPage">
-  <h2>Staff Login</h2>
+  <h2 id="staffLoginTitle">Staff Login</h2>
   <input type="password" id="staffPassword" placeholder="Staff Password">
-  <button class="staff" onclick="staffLogin()">Login Staff</button>
-  <button class="logout" onclick="backToLogin()">Back</button>
+  <button class="staff" onclick="staffLogin()" id="btnStaffLogin">Login Staff</button>
+  <button class="logout" onclick="backToLogin()" id="btnBack1">Back</button>
 </div>
 
 <div class="container hidden" id="staffPage">
-  <h2>Staff Points Panel</h2>
-  <p>RM1 = 1 Point</p>
+  <h2 id="staffPanelTitle">Staff Points Panel</h2>
+  <p id="pointRuleText">RM1 = 1 Point</p>
 
   <input type="text" id="customerPhone" placeholder="Customer Phone">
   <select id="staffAction">
@@ -69,44 +78,44 @@
   </select>
   <input type="number" id="pointAmount" placeholder="Amount / Points">
 
-  <button class="staff" onclick="processPoints()">Submit</button>
+  <button class="staff" onclick="processPoints()" id="btnSubmit">Submit</button>
 
   <div class="card hidden" id="staffResult">
     <p id="staffCustomerName"></p>
     <div class="points" id="staffCustomerPoints">0</div>
-    <p>Total Points</p>
+    <p id="totalPointsText">Total Points</p>
   </div>
 
-  <button class="logout" onclick="logout()">Logout</button>
+  <button class="logout" onclick="logout()" id="btnLogout2">Logout</button>
 </div>
 
 <div class="container hidden" id="bossLoginPage">
-  <h2>Boss Login</h2>
+  <h2 id="bossLoginTitle">Boss Login</h2>
   <input type="password" id="bossPassword" placeholder="Boss Password">
-  <button class="boss" onclick="bossLogin()">Login Boss</button>
-  <button class="logout" onclick="backToLogin()">Back</button>
+  <button class="boss" onclick="bossLogin()" id="btnBossLogin">Login Boss</button>
+  <button class="logout" onclick="backToLogin()" id="btnBack2">Back</button>
 </div>
 
 <div class="container hidden" id="bossPage">
-  <h2>Boss Dashboard</h2>
+  <h2 id="bossDashboardTitle">Boss Dashboard</h2>
 
-  <button class="boss" onclick="loadAllMembers()">Refresh Customer List</button>
-  <button class="register" onclick="downloadCSV()">Download Customer CSV</button>
+  <button class="boss" onclick="loadAllMembers()" id="btnRefresh">Refresh Customer List</button>
+  <button class="register" onclick="downloadCSV()" id="btnDownload">Download Customer CSV</button>
 
   <input type="text" id="bossCustomerPhone" placeholder="Customer Phone">
   <input type="number" id="bossNewPoints" placeholder="Set New Points">
-  <button class="boss" onclick="setPoints()">Update Points</button>
+  <button class="boss" onclick="setPoints()" id="btnUpdatePoints">Update Points</button>
 
   <div id="customerTable"></div>
 
-  <button class="logout" onclick="logout()">Logout</button>
+  <button class="logout" onclick="logout()" id="btnLogout3">Logout</button>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getFirestore, doc, setDoc, getDoc, updateDoc,
-    collection, getDocs
+    collection, getDocs, query, where
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -120,24 +129,122 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
   let allMembers = [];
+  let currentLang = "en";
+
+  const text = {
+    en:{
+      subtitle:"Wonderful Pineapple Point System",
+      customerLogin:"Customer Login",
+      register:"Register Member",
+      staff:"Staff Panel",
+      boss:"Boss Panel",
+      memberDashboard:"Member Dashboard",
+      currentPoints:"Current Points",
+      openWhatsapp:"Open WhatsApp",
+      logout:"Logout",
+      staffLogin:"Staff Login",
+      loginStaff:"Login Staff",
+      back:"Back",
+      staffPanel:"Staff Points Panel",
+      rule:"RM1 = 1 Point",
+      submit:"Submit",
+      totalPoints:"Total Points",
+      bossLogin:"Boss Login",
+      loginBoss:"Login Boss",
+      bossDashboard:"Boss Dashboard",
+      refresh:"Refresh Customer List",
+      download:"Download Customer CSV",
+      updatePoints:"Update Points"
+    },
+    zh:{
+      subtitle:"Wonderful Pineapple 会员积分系统",
+      customerLogin:"顾客登入",
+      register:"注册会员",
+      staff:"员工后台",
+      boss:"老板后台",
+      memberDashboard:"会员资料",
+      currentPoints:"目前积分",
+      openWhatsapp:"打开 WhatsApp",
+      logout:"退出",
+      staffLogin:"员工登入",
+      loginStaff:"员工登入",
+      back:"返回",
+      staffPanel:"员工积分后台",
+      rule:"RM1 = 1 分",
+      submit:"提交",
+      totalPoints:"总积分",
+      bossLogin:"老板登入",
+      loginBoss:"老板登入",
+      bossDashboard:"老板后台",
+      refresh:"刷新顾客名单",
+      download:"下载顾客资料 CSV",
+      updatePoints:"更新积分"
+    }
+  };
+
+  window.changeLanguage = function(){
+    currentLang = document.getElementById("languageSelect").value;
+    applyLanguage();
+    if(allMembers.length > 0){
+      renderCustomerTable();
+    }
+  }
+
+  function applyLanguage(){
+    const t = text[currentLang];
+    document.getElementById("subtitle").innerText = t.subtitle;
+    document.getElementById("btnCustomerLogin").innerText = t.customerLogin;
+    document.getElementById("btnRegister").innerText = t.register;
+    document.getElementById("btnStaff").innerText = t.staff;
+    document.getElementById("btnBoss").innerText = t.boss;
+    document.getElementById("memberDashboardTitle").innerText = t.memberDashboard;
+    document.getElementById("currentPointsText").innerText = t.currentPoints;
+    document.getElementById("memberWhatsappBtn").innerText = t.openWhatsapp;
+    document.getElementById("btnLogout1").innerText = t.logout;
+    document.getElementById("staffLoginTitle").innerText = t.staffLogin;
+    document.getElementById("btnStaffLogin").innerText = t.loginStaff;
+    document.getElementById("btnBack1").innerText = t.back;
+    document.getElementById("staffPanelTitle").innerText = t.staffPanel;
+    document.getElementById("pointRuleText").innerText = t.rule;
+    document.getElementById("btnSubmit").innerText = t.submit;
+    document.getElementById("totalPointsText").innerText = t.totalPoints;
+    document.getElementById("btnLogout2").innerText = t.logout;
+    document.getElementById("bossLoginTitle").innerText = t.bossLogin;
+    document.getElementById("btnBossLogin").innerText = t.loginBoss;
+    document.getElementById("btnBack2").innerText = t.back;
+    document.getElementById("bossDashboardTitle").innerText = t.bossDashboard;
+    document.getElementById("btnRefresh").innerText = t.refresh;
+    document.getElementById("btnDownload").innerText = t.download;
+    document.getElementById("btnUpdatePoints").innerText = t.updatePoints;
+    document.getElementById("btnLogout3").innerText = t.logout;
+  }
 
   function normalizePhone(phone){
     phone = String(phone).replace(/\D/g,"");
-
     if(phone.startsWith("0")){
       phone = "6" + phone;
     }
-
     if(phone.startsWith("60")){
       return phone;
     }
-
-    phone = "60" + phone;
-    return phone;
+    return "60" + phone;
   }
 
-  function whatsappLink(phone){
+  function whatsappLink(phone, points){
+    let msg = "";
+
+    if(points !== undefined){
+      if(currentLang === "zh"){
+        msg = "您好，您的 Milk Tea Demo 会员积分目前是 " + points + " 分。谢谢。";
+      }else{
+        msg = "Hi, your Milk Tea Demo membership points are currently " + points + " points. Thank you.";
+      }
+
+      return "https://wa.me/" + normalizePhone(phone) + "?text=" + encodeURIComponent(msg);
+    }
+
     return "https://wa.me/" + normalizePhone(phone);
   }
 
@@ -157,35 +264,52 @@
   }
 
   window.registerMember = async function(){
-    let name = prompt("Enter Customer Name");
-    let phone = prompt("Enter Phone Number");
-    let email = prompt("Enter Email");
+    let name = prompt(currentLang === "zh" ? "输入顾客名字" : "Enter Customer Name");
+    let phone = prompt(currentLang === "zh" ? "输入电话号码" : "Enter Phone Number");
+    let email = prompt(currentLang === "zh" ? "输入 Email" : "Enter Email");
 
     if(!name || !phone || !email){
-      alert("Please fill all information");
+      alert(currentLang === "zh" ? "请填写全部资料" : "Please fill all information");
       return;
     }
 
     phone = normalizePhone(phone);
+    email = email.trim().toLowerCase();
+
+    const phoneRef = doc(db, "members", phone);
+    const phoneSnap = await getDoc(phoneRef);
+
+    if(phoneSnap.exists()){
+      alert(currentLang === "zh" ? "这个电话号码已经注册过了" : "This phone number is already registered");
+      return;
+    }
+
+    const emailQuery = query(collection(db, "members"), where("email", "==", email));
+    const emailSnap = await getDocs(emailQuery);
+
+    if(!emailSnap.empty){
+      alert(currentLang === "zh" ? "这个 Email 已经注册过了" : "This email is already registered");
+      return;
+    }
 
     await setDoc(doc(db, "members", phone), {
       name:name,
       phone:phone,
       email:email,
       points:0,
-      whatsapp:whatsappLink(phone),
+      whatsapp:"https://wa.me/" + phone,
       memberId:"MTD-" + Date.now(),
       createdAt:new Date().toLocaleString()
     });
 
-    alert("Member Registered Successfully!");
+    alert(currentLang === "zh" ? "会员注册成功" : "Member Registered Successfully!");
   }
 
   window.login = async function(){
     let phone = normalizePhone(document.getElementById("loginPhone").value);
 
     if(!phone){
-      alert("Please enter phone number");
+      alert(currentLang === "zh" ? "请输入电话号码" : "Please enter phone number");
       return;
     }
 
@@ -193,7 +317,7 @@
     const docSnap = await getDoc(docRef);
 
     if(!docSnap.exists()){
-      alert("Member not found");
+      alert(currentLang === "zh" ? "找不到会员" : "Member not found");
       return;
     }
 
@@ -202,15 +326,18 @@
     hideAll();
     document.getElementById("dashboardPage").classList.remove("hidden");
 
-    document.getElementById("welcomeText").innerText = "Welcome, " + member.name;
+    document.getElementById("welcomeText").innerText =
+      currentLang === "zh" ? "欢迎, " + member.name : "Welcome, " + member.name;
+
     document.getElementById("pointsText").innerText = member.points || 0;
+
     document.getElementById("memberInfo").innerText =
-      "Phone: " + member.phone +
+      (currentLang === "zh" ? "电话: " : "Phone: ") + member.phone +
       "\nEmail: " + member.email +
       "\nMember ID: " + member.memberId;
 
     document.getElementById("memberWhatsappBtn").onclick = function(){
-      window.open(whatsappLink(member.phone), "_blank");
+      window.open(whatsappLink(member.phone, member.points || 0), "_blank");
     }
   }
 
@@ -224,7 +351,7 @@
       hideAll();
       document.getElementById("staffPage").classList.remove("hidden");
     }else{
-      alert("Wrong staff password");
+      alert(currentLang === "zh" ? "员工密码错误" : "Wrong staff password");
     }
   }
 
@@ -234,7 +361,7 @@
     let amount = Number(document.getElementById("pointAmount").value);
 
     if(!phone || !amount){
-      alert("Please enter phone and amount");
+      alert(currentLang === "zh" ? "请输入电话和数额" : "Please enter phone and amount");
       return;
     }
 
@@ -242,32 +369,34 @@
     const docSnap = await getDoc(docRef);
 
     if(!docSnap.exists()){
-      alert("Customer not found");
+      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
       return;
     }
 
     let member = docSnap.data();
     let currentPoints = Number(member.points || 0);
+    let changePoints = Math.floor(amount);
     let newPoints = currentPoints;
 
     if(action === "add"){
-      newPoints = currentPoints + Math.floor(amount);
+      newPoints = currentPoints + changePoints;
     }else{
-      if(currentPoints < amount){
-        alert("Not enough points");
+      if(currentPoints < changePoints){
+        alert(currentLang === "zh" ? "积分不足" : "Not enough points");
         return;
       }
-      newPoints = currentPoints - Math.floor(amount);
+      newPoints = currentPoints - changePoints;
     }
 
     await updateDoc(docRef, { points:newPoints });
 
     document.getElementById("staffResult").classList.remove("hidden");
     document.getElementById("staffCustomerName").innerText =
-      member.name + (action === "add" ? " +" : " -") + Math.floor(amount) + " points";
+      member.name + (action === "add" ? " +" : " -") + changePoints + " points";
+
     document.getElementById("staffCustomerPoints").innerText = newPoints;
 
-    alert("Updated successfully!");
+    alert(currentLang === "zh" ? "更新成功" : "Updated successfully!");
   }
 
   window.showBossLogin = function(){
@@ -281,7 +410,7 @@
       document.getElementById("bossPage").classList.remove("hidden");
       await loadAllMembers();
     }else{
-      alert("Wrong boss password");
+      alert(currentLang === "zh" ? "老板密码错误" : "Wrong boss password");
     }
   }
 
@@ -290,7 +419,7 @@
     let newPoints = Number(document.getElementById("bossNewPoints").value);
 
     if(!phone || isNaN(newPoints)){
-      alert("Please enter phone and points");
+      alert(currentLang === "zh" ? "请输入电话和积分" : "Please enter phone and points");
       return;
     }
 
@@ -298,12 +427,12 @@
     const docSnap = await getDoc(docRef);
 
     if(!docSnap.exists()){
-      alert("Customer not found");
+      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
       return;
     }
 
     await updateDoc(docRef, { points:newPoints });
-    alert("Points updated successfully!");
+    alert(currentLang === "zh" ? "积分更新成功" : "Points updated successfully!");
     loadAllMembers();
   }
 
@@ -315,12 +444,16 @@
       allMembers.push(docItem.data());
     });
 
+    renderCustomerTable();
+  }
+
+  function renderCustomerTable(){
     let html = `
       <table>
         <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Points</th>
+          <th>${currentLang === "zh" ? "名字" : "Name"}</th>
+          <th>${currentLang === "zh" ? "电话" : "Phone"}</th>
+          <th>${currentLang === "zh" ? "积分" : "Points"}</th>
           <th>WhatsApp</th>
         </tr>
     `;
@@ -331,7 +464,7 @@
           <td>${m.name || ""}</td>
           <td>${m.phone || ""}</td>
           <td>${m.points || 0}</td>
-          <td><button class="wa" onclick="openWA('${m.phone}')">WA</button></td>
+          <td><button class="wa" onclick="openWA('${m.phone}', '${m.points || 0}')">WA</button></td>
         </tr>
       `;
     });
@@ -340,20 +473,20 @@
     document.getElementById("customerTable").innerHTML = html;
   }
 
-  window.openWA = function(phone){
-    window.open(whatsappLink(phone), "_blank");
+  window.openWA = function(phone, points){
+    window.open(whatsappLink(phone, points), "_blank");
   }
 
   window.downloadCSV = function(){
     if(allMembers.length === 0){
-      alert("Please refresh customer list first");
+      alert(currentLang === "zh" ? "请先刷新顾客名单" : "Please refresh customer list first");
       return;
     }
 
     let csv = "Name,Phone,Email,Points,Member ID,WhatsApp,Created At\n";
 
     allMembers.forEach(m => {
-      csv += `"${m.name || ""}","${m.phone || ""}","${m.email || ""}","${m.points || 0}","${m.memberId || ""}","${whatsappLink(m.phone)}","${m.createdAt || ""}"\n`;
+      csv += `"${m.name || ""}","${m.phone || ""}","${m.email || ""}","${m.points || 0}","${m.memberId || ""}","${whatsappLink(m.phone, m.points || 0)}","${m.createdAt || ""}"\n`;
     });
 
     let blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
@@ -362,6 +495,8 @@
     link.download = "milk-tea-demo-customers.csv";
     link.click();
   }
+
+  applyLanguage();
 </script>
 
 </body>

@@ -6,367 +6,363 @@
   <title>Milk Tea Demo</title>
 
   <style>
-    body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:#f5f5f5;
-    }
-
-    .container{
-      max-width:420px;
-      margin:35px auto;
-      background:white;
-      padding:25px;
-      border-radius:20px;
-      box-shadow:0 0 15px rgba(0,0,0,0.1);
-    }
-
-    h1{
-      text-align:center;
-      color:#ff9800;
-      margin-bottom:8px;
-    }
-
-    h2{
-      text-align:center;
-      color:#ff9800;
-    }
-
-    p{
-      text-align:center;
-      color:gray;
-    }
-
-    input{
-      width:100%;
-      padding:15px;
-      margin-bottom:12px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      font-size:16px;
-      box-sizing:border-box;
-    }
-
-    button{
-      width:100%;
-      padding:15px;
-      border:none;
-      border-radius:10px;
-      background:#ff9800;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-      margin-bottom:10px;
-    }
-
-    .register{ background:#4caf50; }
-    .staff{ background:#2196f3; }
-    .boss{ background:#9c27b0; }
-    .logout{ background:#777; }
-
-    .card{
-      background:#fff7e6;
-      padding:20px;
-      border-radius:18px;
-      text-align:center;
-      margin:20px 0;
-    }
-
-    .points{
-      font-size:48px;
-      font-weight:bold;
-      color:#ff9800;
-    }
-
-    .hidden{
-      display:none;
-    }
-
-    .small{
-      font-size:13px;
-      color:#777;
-      line-height:1.5;
-    }
+    body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
+    .container{max-width:480px;margin:25px auto;background:white;padding:22px;border-radius:20px;box-shadow:0 0 15px rgba(0,0,0,.1);}
+    h1,h2{text-align:center;color:#ff9800;}
+    p{text-align:center;color:gray;}
+    input,select{width:100%;padding:14px;margin-bottom:12px;border-radius:10px;border:1px solid #ccc;font-size:16px;box-sizing:border-box;}
+    button{width:100%;padding:14px;border:none;border-radius:10px;background:#ff9800;color:white;font-size:16px;margin-bottom:10px;cursor:pointer;}
+    .register{background:#4caf50}.staff{background:#2196f3}.boss{background:#9c27b0}.logout{background:#777}.danger{background:#e53935}.wa{background:#25D366}
+    .hidden{display:none}
+    .card{background:#fff7e6;padding:18px;border-radius:18px;text-align:center;margin:15px 0;}
+    .points{font-size:44px;font-weight:bold;color:#ff9800;}
+    .small{font-size:13px;color:#666;line-height:1.5;}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-top:15px;}
+    th,td{border:1px solid #ddd;padding:7px;text-align:left;}
+    th{background:#fff3d8;}
   </style>
 </head>
 
 <body>
 
-  <!-- Login Page -->
-  <div class="container" id="loginPage">
-    <h1>Milk Tea Demo</h1>
-    <p>Wonderful Pineapple Point System</p>
+<div class="container" id="loginPage">
+  <h1>Milk Tea Demo</h1>
+  <p>Wonderful Pineapple Point System</p>
 
-    <input type="email" id="loginEmail" placeholder="Customer Email">
-    <input type="password" id="loginPassword" placeholder="Customer Password">
+  <input type="text" id="loginPhone" placeholder="Customer Phone: 0123456789">
+  <input type="password" id="loginPassword" placeholder="Customer Password">
 
-    <button onclick="login()">Customer Login</button>
-    <button class="register" onclick="registerMember()">Register Member</button>
-    <button class="staff" onclick="showStaffLogin()">Staff Panel</button>
-    <button class="boss" onclick="showBossLogin()">Boss Panel</button>
+  <button onclick="login()">Customer Login</button>
+  <button class="register" onclick="registerMember()">Register Member</button>
+  <button class="staff" onclick="showStaffLogin()">Staff Panel</button>
+  <button class="boss" onclick="showBossLogin()">Boss Panel</button>
+</div>
+
+<div class="container hidden" id="dashboardPage">
+  <h1>Member Dashboard</h1>
+  <p id="welcomeText"></p>
+
+  <div class="card">
+    <p>Current Points</p>
+    <div class="points" id="pointsText">0</div>
   </div>
 
-  <!-- Member Dashboard -->
-  <div class="container hidden" id="dashboardPage">
-    <h1>Member Dashboard</h1>
-    <p id="welcomeText"></p>
+  <p class="small" id="memberInfo"></p>
+  <button class="wa" id="memberWhatsappBtn">Open WhatsApp</button>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-    <div class="card">
-      <p>Current Points</p>
-      <div class="points" id="pointsText">0</div>
-    </div>
+<div class="container hidden" id="staffLoginPage">
+  <h2>Staff Login</h2>
+  <input type="password" id="staffPassword" placeholder="Staff Password">
+  <button class="staff" onclick="staffLogin()">Login Staff</button>
+  <button class="logout" onclick="backToLogin()">Back</button>
+</div>
 
-    <p class="small" id="memberInfo"></p>
+<div class="container hidden" id="staffPage">
+  <h2>Staff Points Panel</h2>
+  <p>RM1 = 1 Point</p>
 
-    <button class="logout" onclick="logout()">Logout</button>
+  <input type="text" id="customerPhone" placeholder="Customer Phone">
+  <select id="staffAction">
+    <option value="add">Add Points / 加分</option>
+    <option value="deduct">Redeem Points / 兑换扣分</option>
+  </select>
+  <input type="number" id="pointAmount" placeholder="Amount / Points">
+
+  <button class="staff" onclick="processPoints()">Submit</button>
+
+  <div class="card hidden" id="staffResult">
+    <p id="staffCustomerName"></p>
+    <div class="points" id="staffCustomerPoints">0</div>
+    <p>Total Points</p>
   </div>
 
-  <!-- Staff Login -->
-  <div class="container hidden" id="staffLoginPage">
-    <h2>Staff Login</h2>
-    <input type="password" id="staffPassword" placeholder="Staff Password">
-    <button class="staff" onclick="staffLogin()">Login Staff</button>
-    <button class="logout" onclick="backToLogin()">Back</button>
-  </div>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-  <!-- Staff Panel -->
-  <div class="container hidden" id="staffPage">
-    <h2>Staff Add Points</h2>
-    <p>RM1 = 1 Point</p>
+<div class="container hidden" id="bossLoginPage">
+  <h2>Boss Login</h2>
+  <input type="password" id="bossPassword" placeholder="Boss Password">
+  <button class="boss" onclick="bossLogin()">Login Boss</button>
+  <button class="logout" onclick="backToLogin()">Back</button>
+</div>
 
-    <input type="email" id="customerEmail" placeholder="Customer Email">
-    <input type="number" id="amountSpent" placeholder="Amount Spent RM">
+<div class="container hidden" id="bossPage">
+  <h2>Boss Dashboard</h2>
 
-    <button class="staff" onclick="addPoints()">Add Points</button>
+  <button class="boss" onclick="loadAllMembers()">Refresh Customer List</button>
+  <button class="register" onclick="downloadCSV()">Download Customer CSV</button>
 
-    <div class="card hidden" id="staffResult">
-      <p id="staffCustomerName"></p>
-      <div class="points" id="staffCustomerPoints">0</div>
-      <p>Total Points</p>
-    </div>
+  <input type="text" id="bossCustomerPhone" placeholder="Customer Phone">
+  <input type="number" id="bossNewPoints" placeholder="Set New Points">
+  <button class="boss" onclick="setPoints()">Update Points</button>
 
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  <div id="customerTable"></div>
 
-  <!-- Boss Login -->
-  <div class="container hidden" id="bossLoginPage">
-    <h2>Boss Login</h2>
-    <input type="password" id="bossPassword" placeholder="Boss Password">
-    <button class="boss" onclick="bossLogin()">Login Boss</button>
-    <button class="logout" onclick="backToLogin()">Back</button>
-  </div>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-  <!-- Boss Panel -->
-  <div class="container hidden" id="bossPage">
-    <h2>Boss Modify Points</h2>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, doc, setDoc, getDoc, updateDoc,
+    collection, getDocs
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <input type="email" id="bossCustomerEmail" placeholder="Customer Email">
-    <input type="number" id="bossNewPoints" placeholder="Set New Points">
+  const firebaseConfig = {
+    apiKey: "AIzaSyDmjVKWl__VmXM5b8daTlyq3sUMAQqSQV0",
+    authDomain: "milk-tea-demo.firebaseapp.com",
+    projectId: "milk-tea-demo",
+    storageBucket: "milk-tea-demo.firebasestorage.app",
+    messagingSenderId: "501059382083",
+    appId: "1:501059382083:web:b0742f7502b40de2485df6"
+  };
 
-    <button class="boss" onclick="setPoints()">Update Points</button>
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  let allMembers = [];
 
-    <div class="card hidden" id="bossResult">
-      <p id="bossCustomerName"></p>
-      <div class="points" id="bossCustomerPoints">0</div>
-      <p>Updated Points</p>
-    </div>
+  function normalizePhone(phone){
+    phone = String(phone).replace(/\D/g,"");
+    if(phone.startsWith("0")){
+      phone = "6" + phone;
+    }
+    if(!phone.startsWith("60")){
+      phone = "60" + phone;
+    }
+    return phone;
+  }
 
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+  function whatsappLink(phone){
+    return "https://wa.me/" + normalizePhone(phone);
+  }
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  function hideAll(){
+    ["loginPage","dashboardPage","staffLoginPage","staffPage","bossLoginPage","bossPage"]
+    .forEach(id => document.getElementById(id).classList.add("hidden"));
+  }
 
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      getDoc,
-      updateDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  window.backToLogin = function(){
+    hideAll();
+    document.getElementById("loginPage").classList.remove("hidden");
+  }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDmjVKWl__VmXM5b8daTlyq3sUMAQqSQV0",
-      authDomain: "milk-tea-demo.firebaseapp.com",
-      projectId: "milk-tea-demo",
-      storageBucket: "milk-tea-demo.firebasestorage.app",
-      messagingSenderId: "501059382083",
-      appId: "1:501059382083:web:b0742f7502b40de2485df6"
-    };
+  window.logout = function(){
+    hideAll();
+    document.getElementById("loginPage").classList.remove("hidden");
+  }
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  window.registerMember = async function(){
+    let name = prompt("Enter Customer Name");
+    let phone = prompt("Enter Phone Number");
+    let email = prompt("Enter Email");
+    let password = prompt("Create Password");
 
-    function hideAll(){
-      document.getElementById("loginPage").classList.add("hidden");
-      document.getElementById("dashboardPage").classList.add("hidden");
-      document.getElementById("staffLoginPage").classList.add("hidden");
-      document.getElementById("staffPage").classList.add("hidden");
-      document.getElementById("bossLoginPage").classList.add("hidden");
-      document.getElementById("bossPage").classList.add("hidden");
+    if(!name || !phone || !email || !password){
+      alert("Please fill all information");
+      return;
     }
 
-    window.backToLogin = function(){
+    phone = normalizePhone(phone);
+
+    await setDoc(doc(db, "members", phone), {
+      name:name,
+      phone:phone,
+      email:email,
+      password:password,
+      points:0,
+      whatsapp:whatsappLink(phone),
+      memberId:"MTD-" + Date.now(),
+      createdAt:new Date().toLocaleString()
+    });
+
+    alert("Member Registered Successfully!");
+  }
+
+  window.login = async function(){
+    let phone = normalizePhone(document.getElementById("loginPhone").value);
+    let password = document.getElementById("loginPassword").value;
+
+    const docRef = doc(db, "members", phone);
+    const docSnap = await getDoc(docRef);
+
+    if(!docSnap.exists()){
+      alert("Member not found");
+      return;
+    }
+
+    let member = docSnap.data();
+
+    if(member.password !== password){
+      alert("Wrong password");
+      return;
+    }
+
+    hideAll();
+    document.getElementById("dashboardPage").classList.remove("hidden");
+
+    document.getElementById("welcomeText").innerText = "Welcome, " + member.name;
+    document.getElementById("pointsText").innerText = member.points;
+    document.getElementById("memberInfo").innerText =
+      "Phone: " + member.phone +
+      "\nEmail: " + member.email +
+      "\nMember ID: " + member.memberId;
+
+    document.getElementById("memberWhatsappBtn").onclick = function(){
+      window.open(whatsappLink(member.phone), "_blank");
+    }
+  }
+
+  window.showStaffLogin = function(){
+    hideAll();
+    document.getElementById("staffLoginPage").classList.remove("hidden");
+  }
+
+  window.staffLogin = function(){
+    if(document.getElementById("staffPassword").value === "staff123"){
       hideAll();
-      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("staffPage").classList.remove("hidden");
+    }else{
+      alert("Wrong staff password");
+    }
+  }
+
+  window.processPoints = async function(){
+    let phone = normalizePhone(document.getElementById("customerPhone").value);
+    let action = document.getElementById("staffAction").value;
+    let amount = Number(document.getElementById("pointAmount").value);
+
+    if(!phone || !amount){
+      alert("Please enter phone and amount");
+      return;
     }
 
-    window.logout = function(){
+    const docRef = doc(db, "members", phone);
+    const docSnap = await getDoc(docRef);
+
+    if(!docSnap.exists()){
+      alert("Customer not found");
+      return;
+    }
+
+    let member = docSnap.data();
+    let currentPoints = Number(member.points || 0);
+    let newPoints = currentPoints;
+
+    if(action === "add"){
+      newPoints = currentPoints + Math.floor(amount);
+    }else{
+      if(currentPoints < amount){
+        alert("Not enough points");
+        return;
+      }
+      newPoints = currentPoints - Math.floor(amount);
+    }
+
+    await updateDoc(docRef, { points:newPoints });
+
+    document.getElementById("staffResult").classList.remove("hidden");
+    document.getElementById("staffCustomerName").innerText =
+      member.name + (action === "add" ? " +" : " -") + Math.floor(amount) + " points";
+    document.getElementById("staffCustomerPoints").innerText = newPoints;
+
+    alert("Updated successfully!");
+  }
+
+  window.showBossLogin = function(){
+    hideAll();
+    document.getElementById("bossLoginPage").classList.remove("hidden");
+  }
+
+  window.bossLogin = async function(){
+    if(document.getElementById("bossPassword").value === "boss123"){
       hideAll();
-      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("bossPage").classList.remove("hidden");
+      await loadAllMembers();
+    }else{
+      alert("Wrong boss password");
+    }
+  }
+
+  window.setPoints = async function(){
+    let phone = normalizePhone(document.getElementById("bossCustomerPhone").value);
+    let newPoints = Number(document.getElementById("bossNewPoints").value);
+
+    if(!phone || isNaN(newPoints)){
+      alert("Please enter phone and points");
+      return;
     }
 
-    window.registerMember = async function(){
-      let name = prompt("Enter Your Name");
-      let phone = prompt("Enter Your Phone Number");
-      let email = prompt("Enter Your Email");
-      let password = prompt("Create Password");
+    const docRef = doc(db, "members", phone);
+    const docSnap = await getDoc(docRef);
 
-      if(!name || !phone || !email || !password){
-        alert("Please fill all information");
-        return;
-      }
-
-      await setDoc(doc(db, "members", email), {
-        name:name,
-        phone:phone,
-        email:email,
-        password:password,
-        points:0,
-        memberId:"MTD-" + Date.now()
-      });
-
-      alert("Member Registered Successfully!");
+    if(!docSnap.exists()){
+      alert("Customer not found");
+      return;
     }
 
-    window.login = async function(){
-      let email = document.getElementById("loginEmail").value;
-      let password = document.getElementById("loginPassword").value;
+    await updateDoc(docRef, { points:newPoints });
+    alert("Points updated successfully!");
+    loadAllMembers();
+  }
 
-      const docRef = doc(db, "members", email);
-      const docSnap = await getDoc(docRef);
+  window.loadAllMembers = async function(){
+    const querySnapshot = await getDocs(collection(db, "members"));
+    allMembers = [];
 
-      if(!docSnap.exists()){
-        alert("Member not found");
-        return;
-      }
+    querySnapshot.forEach((docItem) => {
+      allMembers.push(docItem.data());
+    });
 
-      let member = docSnap.data();
+    let html = `
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Points</th>
+          <th>WhatsApp</th>
+        </tr>
+    `;
 
-      if(member.password !== password){
-        alert("Wrong password");
-        return;
-      }
+    allMembers.forEach(m => {
+      html += `
+        <tr>
+          <td>${m.name || ""}</td>
+          <td>${m.phone || ""}</td>
+          <td>${m.points || 0}</td>
+          <td><button class="wa" onclick="openWA('${m.phone}')">WA</button></td>
+        </tr>
+      `;
+    });
 
-      hideAll();
-      document.getElementById("dashboardPage").classList.remove("hidden");
+    html += "</table>";
+    document.getElementById("customerTable").innerHTML = html;
+  }
 
-      document.getElementById("welcomeText").innerText = "Welcome, " + member.name;
-      document.getElementById("pointsText").innerText = member.points;
-      document.getElementById("memberInfo").innerText =
-        "Phone: " + member.phone + "\nEmail: " + member.email + "\nMember ID: " + member.memberId;
+  window.openWA = function(phone){
+    window.open(whatsappLink(phone), "_blank");
+  }
+
+  window.downloadCSV = function(){
+    if(allMembers.length === 0){
+      alert("Please refresh customer list first");
+      return;
     }
 
-    window.showStaffLogin = function(){
-      hideAll();
-      document.getElementById("staffLoginPage").classList.remove("hidden");
-    }
+    let csv = "Name,Phone,Email,Points,Member ID,WhatsApp\n";
 
-    window.staffLogin = function(){
-      let password = document.getElementById("staffPassword").value;
+    allMembers.forEach(m => {
+      csv += `"${m.name || ""}","${m.phone || ""}","${m.email || ""}","${m.points || 0}","${m.memberId || ""}","${whatsappLink(m.phone)}"\n`;
+    });
 
-      if(password === "staff123"){
-        hideAll();
-        document.getElementById("staffPage").classList.remove("hidden");
-      }else{
-        alert("Wrong staff password");
-      }
-    }
-
-    window.addPoints = async function(){
-      let email = document.getElementById("customerEmail").value;
-      let amount = Number(document.getElementById("amountSpent").value);
-
-      if(!email || !amount){
-        alert("Please enter customer email and amount");
-        return;
-      }
-
-      const docRef = doc(db, "members", email);
-      const docSnap = await getDoc(docRef);
-
-      if(!docSnap.exists()){
-        alert("Customer not found");
-        return;
-      }
-
-      let member = docSnap.data();
-      let pointsToAdd = Math.floor(amount);
-      let newPoints = Number(member.points) + pointsToAdd;
-
-      await updateDoc(docRef, {
-        points:newPoints
-      });
-
-      document.getElementById("staffResult").classList.remove("hidden");
-      document.getElementById("staffCustomerName").innerText =
-        member.name + " +" + pointsToAdd + " points";
-      document.getElementById("staffCustomerPoints").innerText = newPoints;
-
-      alert("Points added successfully!");
-    }
-
-    window.showBossLogin = function(){
-      hideAll();
-      document.getElementById("bossLoginPage").classList.remove("hidden");
-    }
-
-    window.bossLogin = function(){
-      let password = document.getElementById("bossPassword").value;
-
-      if(password === "boss123"){
-        hideAll();
-        document.getElementById("bossPage").classList.remove("hidden");
-      }else{
-        alert("Wrong boss password");
-      }
-    }
-
-    window.setPoints = async function(){
-      let email = document.getElementById("bossCustomerEmail").value;
-      let newPoints = Number(document.getElementById("bossNewPoints").value);
-
-      if(!email && email !== 0){
-        alert("Please enter customer email");
-        return;
-      }
-
-      if(isNaN(newPoints)){
-        alert("Please enter valid points");
-        return;
-      }
-
-      const docRef = doc(db, "members", email);
-      const docSnap = await getDoc(docRef);
-
-      if(!docSnap.exists()){
-        alert("Customer not found");
-        return;
-      }
-
-      let member = docSnap.data();
-
-      await updateDoc(docRef, {
-        points:newPoints
-      });
-
-      document.getElementById("bossResult").classList.remove("hidden");
-      document.getElementById("bossCustomerName").innerText = member.name;
-      document.getElementById("bossCustomerPoints").innerText = newPoints;
-
-      alert("Points updated successfully!");
-    }
-  </script>
+    let blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "milk-tea-demo-customers.csv";
+    link.click();
+  }
+</script>
 
 </body>
 </html>

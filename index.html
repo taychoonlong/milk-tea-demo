@@ -6,19 +6,17 @@
   <title>Milk Tea Demo</title>
 
   <style>
-
     body{
       margin:0;
-      padding:0;
       font-family:Arial, sans-serif;
       background:#f5f5f5;
     }
 
     .container{
-      max-width:400px;
-      margin:50px auto;
+      max-width:420px;
+      margin:40px auto;
       background:white;
-      padding:30px;
+      padding:25px;
       border-radius:20px;
       box-shadow:0 0 15px rgba(0,0,0,0.1);
     }
@@ -26,19 +24,18 @@
     h1{
       text-align:center;
       color:#ff9800;
-      margin-bottom:10px;
+      margin-bottom:8px;
     }
 
     p{
       text-align:center;
       color:gray;
-      margin-bottom:30px;
     }
 
     input{
       width:100%;
       padding:15px;
-      margin-bottom:15px;
+      margin-bottom:12px;
       border-radius:10px;
       border:1px solid #ccc;
       font-size:16px;
@@ -57,41 +54,56 @@
       margin-bottom:10px;
     }
 
-    button:hover{
-      background:#e68900;
+    .register{ background:#4caf50; }
+    .logout{ background:#777; }
+    .card{
+      background:#fff7e6;
+      padding:20px;
+      border-radius:18px;
+      text-align:center;
+      margin:20px 0;
     }
 
-    .register{
-      background:#4caf50;
+    .points{
+      font-size:48px;
+      font-weight:bold;
+      color:#ff9800;
     }
 
-    .register:hover{
-      background:#3d9442;
+    .hidden{
+      display:none;
     }
-
   </style>
 </head>
 
 <body>
 
-  <div class="container">
-
+  <div class="container" id="loginPage">
     <h1>Milk Tea Demo</h1>
-
     <p>Wonderful Pineapple Point System</p>
 
     <input type="email" id="loginEmail" placeholder="Email">
-
     <input type="password" id="loginPassword" placeholder="Password">
 
     <button onclick="login()">Login</button>
-
     <button class="register" onclick="registerMember()">Register Member</button>
+  </div>
 
+  <div class="container hidden" id="dashboardPage">
+    <h1>Member Dashboard</h1>
+    <p id="welcomeText"></p>
+
+    <div class="card">
+      <p>Current Points</p>
+      <div class="points" id="pointsText">0</div>
+    </div>
+
+    <p id="memberInfo"></p>
+
+    <button class="logout" onclick="logout()">Logout</button>
   </div>
 
   <script type="module">
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
     import {
@@ -99,9 +111,7 @@
       doc,
       setDoc,
       getDoc
-    }
-
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDmjVKWl__VmXM5b8daTlyq3sUMAQqSQV0",
@@ -113,11 +123,9 @@
     };
 
     const app = initializeApp(firebaseConfig);
-
     const db = getFirestore(app);
 
     window.registerMember = async function(){
-
       let name = prompt("Enter Your Name");
       let phone = prompt("Enter Your Phone Number");
       let email = prompt("Enter Your Email");
@@ -129,56 +137,49 @@
       }
 
       await setDoc(doc(db, "members", email), {
-
         name:name,
         phone:phone,
         email:email,
         password:password,
-        points:0
-
+        points:0,
+        memberId:"MTD-" + Date.now()
       });
 
       alert("Member Registered Successfully!");
-
     }
 
     window.login = async function(){
-
       let email = document.getElementById("loginEmail").value;
-
       let password = document.getElementById("loginPassword").value;
 
       const docRef = doc(db, "members", email);
-
       const docSnap = await getDoc(docRef);
 
-      if(docSnap.exists()){
-
-        let member = docSnap.data();
-
-        if(member.password === password){
-
-          alert(
-            "Welcome " +
-            member.name +
-            "\nPoints: " +
-            member.points
-          );
-
-        }else{
-
-          alert("Wrong password");
-
-        }
-
-      }else{
-
+      if(!docSnap.exists()){
         alert("Member not found");
-
+        return;
       }
 
+      let member = docSnap.data();
+
+      if(member.password !== password){
+        alert("Wrong password");
+        return;
+      }
+
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("dashboardPage").classList.remove("hidden");
+
+      document.getElementById("welcomeText").innerText = "Welcome, " + member.name;
+      document.getElementById("pointsText").innerText = member.points;
+      document.getElementById("memberInfo").innerText =
+        "Phone: " + member.phone + "\nEmail: " + member.email + "\nMember ID: " + member.memberId;
     }
 
+    window.logout = function(){
+      document.getElementById("dashboardPage").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+    }
   </script>
 
 </body>

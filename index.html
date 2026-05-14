@@ -78,15 +78,64 @@
 
     <p>Wonderful Pineapple Point System</p>
 
-    <input type="email" placeholder="Email">
+    <input type="email" id="loginEmail" placeholder="Email">
 
-    <input type="password" placeholder="Password">
+    <input type="password" id="loginPassword" placeholder="Password">
 
-    <button>Login</button>
+    <button onclick="login()">Login</button>
 
-    <button class="register">Register Member</button>
+    <button class="register" onclick="registerMember()">Register Member</button>
 
   </div>
+
+  <script>
+    function registerMember(){
+
+      let name = prompt("Enter Your Name");
+      let phone = prompt("Enter Your Phone Number");
+      let email = prompt("Enter Your Email");
+      let password = prompt("Create Password");
+
+      if(!name || !phone || !email || !password){
+        alert("Please fill all information");
+        return;
+      }
+
+      let member = {
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        points: 0
+      };
+
+      localStorage.setItem(email, JSON.stringify(member));
+
+      alert("Member Registered Successfully!");
+    }
+
+    function login(){
+
+      let email = document.getElementById("loginEmail").value;
+      let password = document.getElementById("loginPassword").value;
+
+      let data = localStorage.getItem(email);
+
+      if(!data){
+        alert("Member not found. Please register first.");
+        return;
+      }
+
+      let member = JSON.parse(data);
+
+      if(member.password !== password){
+        alert("Wrong password");
+        return;
+      }
+
+      alert("Login Successful! Welcome " + member.name + ". Your points: " + member.points);
+    }
+  </script>
 
 </body>
 </html>

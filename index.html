@@ -6,6 +6,7 @@
   <title>Milk Tea Demo</title>
 
   <style>
+
     body{
       margin:0;
       padding:0;
@@ -67,6 +68,7 @@
     .register:hover{
       background:#3d9442;
     }
+
   </style>
 </head>
 
@@ -88,8 +90,33 @@
 
   </div>
 
-  <script>
-    function registerMember(){
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc
+    }
+
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmjVKWl__VmXM5b8daTlyq3sUMAQqSQV0",
+      authDomain: "milk-tea-demo.firebaseapp.com",
+      projectId: "milk-tea-demo",
+      storageBucket: "milk-tea-demo.firebasestorage.app",
+      messagingSenderId: "501059382083",
+      appId: "1:501059382083:web:b0742f7502b40de2485df6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+    window.registerMember = async function(){
 
       let name = prompt("Enter Your Name");
       let phone = prompt("Enter Your Phone Number");
@@ -101,40 +128,57 @@
         return;
       }
 
-      let member = {
-        name: name,
-        phone: phone,
-        email: email,
-        password: password,
-        points: 0
-      };
+      await setDoc(doc(db, "members", email), {
 
-      localStorage.setItem(email, JSON.stringify(member));
+        name:name,
+        phone:phone,
+        email:email,
+        password:password,
+        points:0
+
+      });
 
       alert("Member Registered Successfully!");
+
     }
 
-    function login(){
+    window.login = async function(){
 
       let email = document.getElementById("loginEmail").value;
+
       let password = document.getElementById("loginPassword").value;
 
-      let data = localStorage.getItem(email);
+      const docRef = doc(db, "members", email);
 
-      if(!data){
-        alert("Member not found. Please register first.");
-        return;
+      const docSnap = await getDoc(docRef);
+
+      if(docSnap.exists()){
+
+        let member = docSnap.data();
+
+        if(member.password === password){
+
+          alert(
+            "Welcome " +
+            member.name +
+            "\nPoints: " +
+            member.points
+          );
+
+        }else{
+
+          alert("Wrong password");
+
+        }
+
+      }else{
+
+        alert("Member not found");
+
       }
 
-      let member = JSON.parse(data);
-
-      if(member.password !== password){
-        alert("Wrong password");
-        return;
-      }
-
-      alert("Login Successful! Welcome " + member.name + ". Your points: " + member.points);
     }
+
   </script>
 
 </body>

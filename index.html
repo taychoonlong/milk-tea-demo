@@ -1,840 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Milk Tea Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milk Tea Demo</title>
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial,sans-serif;
-      background:#f5f5f5;
-      background-size:cover;
-      background-position:center;
-      background-attachment:fixed;
-    }
+<style>
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background:rgba(255,255,255,0.78);
-      z-index:-1;
-    }
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
 
-    .container{
-      max-width:520px;
-      margin:25px auto;
-      background:white;
-      padding:22px;
-      border-radius:20px;
-      box-shadow:0 0 15px rgba(0,0,0,.1);
-    }
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,0.25);
+    z-index:-1;
+}
 
-    .logo{
-      display:block;
-      max-width:130px;
-      max-height:130px;
-      margin:0 auto 12px;
-      object-fit:contain;
-    }
+.container{
+    max-width:520px;
+    margin:25px auto;
 
-    h1,h2{text-align:center;color:#ff9800;}
-    p{text-align:center;color:gray;}
+    background:rgba(255,255,255,0.45);
 
-    input,select{
-      width:100%;
-      padding:14px;
-      margin-bottom:12px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      font-size:16px;
-      box-sizing:border-box;
-    }
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
 
-    button{
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:10px;
-      background:#ff9800;
-      color:white;
-      font-size:16px;
-      margin-bottom:10px;
-      cursor:pointer;
-    }
+    border:1px solid rgba(255,255,255,0.35);
 
-    .register{background:#4caf50}
-    .staff{background:#2196f3}
-    .boss{background:#9c27b0}
-    .logout{background:#777}
-    .wa{background:#25D366}
-    .danger{background:#e53935}
+    padding:22px;
+    border-radius:20px;
 
-    .hidden{display:none}
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+}
 
-    .card{
-      background:#fff7e6;
-      padding:18px;
-      border-radius:18px;
-      text-align:center;
-      margin:15px 0;
-    }
+.logo{
+    display:block;
+    max-width:130px;
+    max-height:130px;
+    margin:0 auto 12px;
+    object-fit:contain;
+}
 
-    .points{
-      font-size:44px;
-      font-weight:bold;
-      color:#ff9800;
-    }
+h1,h2{
+    text-align:center;
+    color:#ff9800;
+}
 
-    .small{
-      font-size:13px;
-      color:#666;
-      line-height:1.5;
-      white-space:pre-line;
-    }
+p{
+    text-align:center;
+    color:#666;
+}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-      margin-top:15px;
-    }
+input,select{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.6);
+    font-size:16px;
+    box-sizing:border-box;
 
-    th,td{
-      border:1px solid #ddd;
-      padding:7px;
-      text-align:left;
-    }
+    background:rgba(255,255,255,0.65);
 
-    th{background:#fff3d8;}
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+}
 
-    .topbar{
-      max-width:520px;
-      margin:15px auto;
-      text-align:right;
-    }
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#ff9800;
+    color:white;
+    font-size:16px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:.2s;
+}
 
-    .topbar select{
-      width:160px;
-      background:white;
-    }
+button:hover{
+    transform:scale(1.01);
+}
 
-    .checkbox-row{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      font-size:13px;
-      color:#555;
-      margin-bottom:15px;
-      line-height:1.4;
-    }
+.register{
+    background:#4caf50;
+}
 
-    .checkbox-row input{
-      width:auto;
-      margin-top:3px;
-    }
-  </style>
+.staff{
+    background:#2196f3;
+}
+
+.boss{
+    background:#9c27b0;
+}
+
+.logout{
+    background:#777;
+}
+
+.hidden{
+    display:none;
+}
+
+.card{
+    background:rgba(255,255,255,0.35);
+
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+
+    padding:18px;
+    border-radius:18px;
+    text-align:center;
+    margin:15px 0;
+
+    border:1px solid rgba(255,255,255,0.4);
+}
+
+.points{
+    font-size:44px;
+    font-weight:bold;
+    color:#ff9800;
+}
+
+.small{
+    font-size:13px;
+    color:#555;
+    line-height:1.5;
+    white-space:pre-line;
+}
+
+.topbar{
+    max-width:520px;
+    margin:15px auto;
+    text-align:right;
+}
+
+.topbar select{
+    width:160px;
+}
+
+.checkbox-row{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:13px;
+    color:#555;
+    margin-bottom:15px;
+    line-height:1.4;
+}
+
+.checkbox-row input{
+    width:auto;
+    margin-top:3px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+    font-size:13px;
+}
+
+th,td{
+    border:1px solid rgba(255,255,255,0.5);
+    padding:8px;
+    text-align:left;
+    background:rgba(255,255,255,0.35);
+}
+
+th{
+    background:rgba(255,255,255,0.6);
+}
+
+</style>
 </head>
 
 <body>
 
 <div class="topbar">
-  <select id="languageSelect" onchange="changeLanguage()">
-    <option value="en">English</option>
-    <option value="zh">中文</option>
-  </select>
+<select id="languageSelect">
+<option>English</option>
+<option>中文</option>
+</select>
 </div>
 
-<div class="container" id="loginPage">
-  <img id="headerLogo1" class="logo hidden">
-  <h1>Milk Tea Demo</h1>
-  <p id="subtitle">Wonderful Pineapple Point System</p>
+<!-- LOGIN PAGE -->
 
-  <input type="text" id="loginPhone" placeholder="Customer Phone: 0123456789">
+<div class="container">
 
-  <button onclick="login()" id="btnCustomerLogin">Customer Login</button>
-  <button class="register" onclick="showRegisterPage()" id="btnRegister">Register Member</button>
-  <button class="staff" onclick="showStaffLogin()" id="btnStaff">Staff Panel</button>
-  <button class="boss" onclick="showBossLogin()" id="btnBoss">Boss Panel</button>
+<img 
+src="https://i.imgur.com/N5uCbDu.png"
+class="logo"
+>
+
+<h1>Milk Tea Demo</h1>
+
+<p>Wonderful Pineapple Point System</p>
+
+<input 
+type="text" 
+placeholder="Customer Phone: 0123456789"
+>
+
+<button>
+Customer Login
+</button>
+
+<button class="register">
+Register Member
+</button>
+
+<button class="staff">
+Staff Panel
+</button>
+
+<button class="boss">
+Boss Panel
+</button>
+
 </div>
 
-<div class="container hidden" id="registerPage">
-  <img id="headerLogo2" class="logo hidden">
-  <h2 id="registerTitle">Register Member</h2>
+<!-- MEMBER DASHBOARD -->
 
-  <input type="text" id="regName" placeholder="Customer Name">
-  <input type="text" id="regPhone" placeholder="Phone Number">
-  <input type="email" id="regEmail" placeholder="Email">
+<div class="container">
 
-  <label class="checkbox-row">
-    <input type="checkbox" id="consentCheckbox">
-    <span id="consentText">
-      I agree to allow this business to collect and use my information for membership points and customer service purposes.
-    </span>
-  </label>
+<img 
+src="https://i.imgur.com/N5uCbDu.png"
+class="logo"
+>
 
-  <button class="register" onclick="registerMember()" id="btnSubmitRegister">Submit Register</button>
-  <button class="logout" onclick="backToLogin()" id="btnBackRegister">Back</button>
+<h1>Member Dashboard</h1>
+
+<p>Welcome, Wonderful Member</p>
+
+<div class="card">
+
+<p>Current Points</p>
+
+<div class="points">
+350
 </div>
 
-<div class="container hidden" id="dashboardPage">
-  <img id="headerLogo3" class="logo hidden">
-  <h1 id="memberDashboardTitle">Member Dashboard</h1>
-  <p id="welcomeText"></p>
-
-  <div class="card">
-    <p id="currentPointsText">Current Points</p>
-    <div class="points" id="pointsText">0</div>
-  </div>
-
-  <p class="small" id="memberInfo"></p>
-  <button class="wa" id="memberWhatsappBtn">Open WhatsApp</button>
-  <button class="logout" onclick="logout()" id="btnLogout1">Logout</button>
 </div>
 
-<div class="container hidden" id="staffLoginPage">
-  <img id="headerLogo4" class="logo hidden">
-  <h2 id="staffLoginTitle">Staff Login</h2>
-  <input type="password" id="staffPasswordInput" placeholder="Staff Password">
-  <button class="staff" onclick="staffLogin()" id="btnStaffLogin">Login Staff</button>
-  <button class="logout" onclick="backToLogin()" id="btnBack1">Back</button>
+<p class="small">
+Phone: 60123456789
+<br>
+Email: wonderful@gmail.com
+<br>
+Member ID: MTD001
+</p>
+
+<button class="register">
+Open WhatsApp
+</button>
+
+<button class="logout">
+Logout
+</button>
+
 </div>
 
-<div class="container hidden" id="staffPage">
-  <img id="headerLogo5" class="logo hidden">
-  <h2 id="staffPanelTitle">Staff Points Panel</h2>
-  <p id="pointRuleText">RM1 = 1 Point</p>
+<!-- STAFF PANEL -->
 
-  <input type="text" id="customerPhone" placeholder="Customer Phone">
-  <select id="staffAction">
-    <option value="add">Add Points / 加分</option>
-    <option value="deduct">Redeem Points / 兑换扣分</option>
-  </select>
-  <input type="number" id="pointAmount" placeholder="Amount / Points">
+<div class="container">
 
-  <button class="staff" onclick="processPoints()" id="btnSubmit">Submit</button>
+<img 
+src="https://i.imgur.com/N5uCbDu.png"
+class="logo"
+>
 
-  <div class="card hidden" id="staffResult">
-    <p id="staffCustomerName"></p>
-    <div class="points" id="staffCustomerPoints">0</div>
-    <p id="totalPointsText">Total Points</p>
-  </div>
+<h1>Staff Panel</h1>
 
-  <button class="logout" onclick="logout()" id="btnLogout2">Logout</button>
+<p>RM1 = 1 Point</p>
+
+<input 
+type="text"
+placeholder="Customer Phone"
+>
+
+<select>
+<option>Add Points / 加分</option>
+<option>Redeem Points / 扣除积分</option>
+</select>
+
+<input 
+type="number"
+placeholder="Amount / Points"
+>
+
+<button class="staff">
+Submit
+</button>
+
+<div class="card">
+
+<p>Customer Total Points</p>
+
+<div class="points">
+580
 </div>
 
-<div class="container hidden" id="bossLoginPage">
-  <img id="headerLogo6" class="logo hidden">
-  <h2 id="bossLoginTitle">Boss Login</h2>
-  <input type="password" id="bossPasswordInput" placeholder="Boss Password">
-  <button class="boss" onclick="bossLogin()" id="btnBossLogin">Login Boss</button>
-  <button class="logout" onclick="backToLogin()" id="btnBack2">Back</button>
 </div>
 
-<div class="container hidden" id="bossPage">
-  <img id="headerLogo7" class="logo hidden">
-  <h2 id="bossDashboardTitle">Boss Dashboard</h2>
+<button class="logout">
+Logout
+</button>
 
-  <button class="boss" onclick="loadAllMembers()" id="btnRefresh">Refresh Customer List</button>
-  <button class="register" onclick="downloadCSV()" id="btnDownload">Download Customer CSV</button>
-
-  <input type="text" id="bossCustomerPhone" placeholder="Customer Phone">
-  <input type="number" id="bossNewPoints" placeholder="Set New Points">
-  <button class="boss" onclick="setPoints()" id="btnUpdatePoints">Update Points</button>
-
-  <div class="card">
-    <h2>Brand Settings</h2>
-    <p class="small">Upload small images only. Logo under 300KB, background under 800KB is better.</p>
-
-    <input type="file" id="logoUpload" accept="image/*">
-    <button class="boss" onclick="uploadLogo()">Upload Logo</button>
-
-    <input type="file" id="bgUpload" accept="image/*">
-    <button class="boss" onclick="uploadBackground()">Upload Background</button>
-
-    <button class="danger" onclick="clearBranding()">Clear Logo & Background</button>
-  </div>
-
-  <div class="card">
-    <h2>Password Settings</h2>
-    <input type="password" id="newStaffPassword" placeholder="New Staff Password">
-    <button class="staff" onclick="updateStaffPassword()">Update Staff Password</button>
-
-    <input type="password" id="newBossPassword" placeholder="New Boss Password">
-    <button class="boss" onclick="updateBossPassword()">Update Boss Password</button>
-  </div>
-
-  <div id="customerTable"></div>
-
-  <button class="logout" onclick="logout()" id="btnLogout3">Logout</button>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getFirestore, doc, setDoc, getDoc, updateDoc,
-    collection, getDocs, query, where
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!-- BOSS PANEL -->
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDmjVKWl__VmXM5b8daTlyq3sUMAQqSQV0",
-    authDomain: "milk-tea-demo.firebaseapp.com",
-    projectId: "milk-tea-demo",
-    storageBucket: "milk-tea-demo.firebasestorage.app",
-    messagingSenderId: "501059382083",
-    appId: "1:501059382083:web:b0742f7502b40de2485df6"
-  };
+<div class="container">
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+<img 
+src="https://i.imgur.com/N5uCbDu.png"
+class="logo"
+>
 
-  let allMembers = [];
-  let currentLang = "en";
+<h1>Boss Dashboard</h1>
 
-  let appSettings = {
-    staffPassword:"staff123",
-    bossPassword:"boss123",
-    logo:"",
-    background:""
-  };
+<button class="boss">
+Refresh Customer List
+</button>
 
-  const text = {
-    en:{
-      subtitle:"Wonderful Pineapple Point System",
-      customerLogin:"Customer Login",
-      register:"Register Member",
-      staff:"Staff Panel",
-      boss:"Boss Panel",
-      registerTitle:"Register Member",
-      submitRegister:"Submit Register",
-      consent:"I agree to allow this business to collect and use my information for membership points and customer service purposes.",
-      memberDashboard:"Member Dashboard",
-      currentPoints:"Current Points",
-      openWhatsapp:"Open WhatsApp",
-      logout:"Logout",
-      staffLogin:"Staff Login",
-      loginStaff:"Login Staff",
-      back:"Back",
-      staffPanel:"Staff Points Panel",
-      rule:"RM1 = 1 Point",
-      submit:"Submit",
-      totalPoints:"Total Points",
-      bossLogin:"Boss Login",
-      loginBoss:"Login Boss",
-      bossDashboard:"Boss Dashboard",
-      refresh:"Refresh Customer List",
-      download:"Download Customer CSV",
-      updatePoints:"Update Points"
-    },
-    zh:{
-      subtitle:"Wonderful Pineapple 会员积分系统",
-      customerLogin:"顾客登入",
-      register:"注册会员",
-      staff:"员工后台",
-      boss:"老板后台",
-      registerTitle:"注册会员",
-      submitRegister:"提交注册",
-      consent:"我同意商家收集和使用我的资料，用于会员积分和客户服务用途。",
-      memberDashboard:"会员资料",
-      currentPoints:"目前积分",
-      openWhatsapp:"打开 WhatsApp",
-      logout:"退出",
-      staffLogin:"员工登入",
-      loginStaff:"员工登入",
-      back:"返回",
-      staffPanel:"员工积分后台",
-      rule:"RM1 = 1 分",
-      submit:"提交",
-      totalPoints:"总积分",
-      bossLogin:"老板登入",
-      loginBoss:"老板登入",
-      bossDashboard:"老板后台",
-      refresh:"刷新顾客名单",
-      download:"下载顾客资料 CSV",
-      updatePoints:"更新积分"
-    }
-  };
+<button class="register">
+Download Customer CSV
+</button>
 
-  async function loadSettings(){
-    const settingsRef = doc(db, "settings", "main");
-    const settingsSnap = await getDoc(settingsRef);
+<div class="card">
 
-    if(settingsSnap.exists()){
-      appSettings = {...appSettings, ...settingsSnap.data()};
-    }else{
-      await setDoc(settingsRef, appSettings);
-    }
+<h2>Brand Settings</h2>
 
-    applyBranding();
-  }
+<p class="small">
+Upload logo and product background photo
+</p>
 
-  function applyBranding(){
-    const logoIds = [
-      "headerLogo1","headerLogo2","headerLogo3","headerLogo4",
-      "headerLogo5","headerLogo6","headerLogo7"
-    ];
+<input type="file">
 
-    logoIds.forEach(id => {
-      const img = document.getElementById(id);
-      if(appSettings.logo){
-        img.src = appSettings.logo;
-        img.classList.remove("hidden");
-      }else{
-        img.classList.add("hidden");
-      }
-    });
+<button class="boss">
+Upload Logo
+</button>
 
-    if(appSettings.background){
-      document.body.style.backgroundImage = `url(${appSettings.background})`;
-    }else{
-      document.body.style.backgroundImage = "";
-    }
-  }
+<input type="file">
 
-  function fileToBase64(file, maxKB){
-    return new Promise((resolve, reject) => {
-      if(!file){
-        reject("No file selected");
-        return;
-      }
+<button class="boss">
+Upload Background
+</button>
 
-      if(file.size > maxKB * 1024){
-        reject("File too large");
-        return;
-      }
+</div>
 
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject("File reading failed");
-      reader.readAsDataURL(file);
-    });
-  }
+<div class="card">
 
-  window.uploadLogo = async function(){
-    try{
-      const file = document.getElementById("logoUpload").files[0];
-      const base64 = await fileToBase64(file, 300);
+<h2>Password Settings</h2>
 
-      appSettings.logo = base64;
-      await updateDoc(doc(db, "settings", "main"), { logo:base64 });
-      applyBranding();
+<input 
+type="password"
+placeholder="New Staff Password"
+>
 
-      alert(currentLang === "zh" ? "Logo 上传成功" : "Logo uploaded successfully");
-    }catch(e){
-      alert(currentLang === "zh" ? "请选择小过 300KB 的 Logo 图片" : "Please choose a logo image under 300KB");
-    }
-  }
+<button class="staff">
+Update Staff Password
+</button>
 
-  window.uploadBackground = async function(){
-    try{
-      const file = document.getElementById("bgUpload").files[0];
-      const base64 = await fileToBase64(file, 800);
+<input 
+type="password"
+placeholder="New Boss Password"
+>
 
-      appSettings.background = base64;
-      await updateDoc(doc(db, "settings", "main"), { background:base64 });
-      applyBranding();
+<button class="boss">
+Update Boss Password
+</button>
 
-      alert(currentLang === "zh" ? "背景图上传成功" : "Background uploaded successfully");
-    }catch(e){
-      alert(currentLang === "zh" ? "请选择小过 800KB 的背景图片" : "Please choose a background image under 800KB");
-    }
-  }
+</div>
 
-  window.clearBranding = async function(){
-    appSettings.logo = "";
-    appSettings.background = "";
+<table>
 
-    await updateDoc(doc(db, "settings", "main"), {
-      logo:"",
-      background:""
-    });
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>Points</th>
+<th>WhatsApp</th>
+</tr>
 
-    applyBranding();
-    alert(currentLang === "zh" ? "Logo 和背景已经清除" : "Logo and background cleared");
-  }
+<tr>
+<td>Wonderful</td>
+<td>60123456789</td>
+<td>350</td>
+<td>
+<button class="register">
+WA
+</button>
+</td>
+</tr>
 
-  window.updateStaffPassword = async function(){
-    const newPassword = document.getElementById("newStaffPassword").value.trim();
+<tr>
+<td>Milk Tea VIP</td>
+<td>60112233445</td>
+<td>890</td>
+<td>
+<button class="register">
+WA
+</button>
+</td>
+</tr>
 
-    if(!newPassword){
-      alert(currentLang === "zh" ? "请输入新的员工密码" : "Please enter new staff password");
-      return;
-    }
+</table>
 
-    appSettings.staffPassword = newPassword;
-    await updateDoc(doc(db, "settings", "main"), { staffPassword:newPassword });
+<button class="logout">
+Logout
+</button>
 
-    document.getElementById("newStaffPassword").value = "";
-    alert(currentLang === "zh" ? "员工密码更新成功" : "Staff password updated");
-  }
-
-  window.updateBossPassword = async function(){
-    const newPassword = document.getElementById("newBossPassword").value.trim();
-
-    if(!newPassword){
-      alert(currentLang === "zh" ? "请输入新的老板密码" : "Please enter new boss password");
-      return;
-    }
-
-    appSettings.bossPassword = newPassword;
-    await updateDoc(doc(db, "settings", "main"), { bossPassword:newPassword });
-
-    document.getElementById("newBossPassword").value = "";
-    alert(currentLang === "zh" ? "老板密码更新成功" : "Boss password updated");
-  }
-
-  window.changeLanguage = function(){
-    currentLang = document.getElementById("languageSelect").value;
-    applyLanguage();
-
-    if(allMembers.length > 0){
-      renderCustomerTable();
-    }
-  }
-
-  function applyLanguage(){
-    const t = text[currentLang];
-
-    document.getElementById("subtitle").innerText = t.subtitle;
-    document.getElementById("btnCustomerLogin").innerText = t.customerLogin;
-    document.getElementById("btnRegister").innerText = t.register;
-    document.getElementById("btnStaff").innerText = t.staff;
-    document.getElementById("btnBoss").innerText = t.boss;
-
-    document.getElementById("registerTitle").innerText = t.registerTitle;
-    document.getElementById("btnSubmitRegister").innerText = t.submitRegister;
-    document.getElementById("consentText").innerText = t.consent;
-    document.getElementById("btnBackRegister").innerText = t.back;
-
-    document.getElementById("memberDashboardTitle").innerText = t.memberDashboard;
-    document.getElementById("currentPointsText").innerText = t.currentPoints;
-    document.getElementById("memberWhatsappBtn").innerText = t.openWhatsapp;
-    document.getElementById("btnLogout1").innerText = t.logout;
-
-    document.getElementById("staffLoginTitle").innerText = t.staffLogin;
-    document.getElementById("btnStaffLogin").innerText = t.loginStaff;
-    document.getElementById("btnBack1").innerText = t.back;
-    document.getElementById("staffPanelTitle").innerText = t.staffPanel;
-    document.getElementById("pointRuleText").innerText = t.rule;
-    document.getElementById("btnSubmit").innerText = t.submit;
-    document.getElementById("totalPointsText").innerText = t.totalPoints;
-    document.getElementById("btnLogout2").innerText = t.logout;
-
-    document.getElementById("bossLoginTitle").innerText = t.bossLogin;
-    document.getElementById("btnBossLogin").innerText = t.loginBoss;
-    document.getElementById("btnBack2").innerText = t.back;
-    document.getElementById("bossDashboardTitle").innerText = t.bossDashboard;
-    document.getElementById("btnRefresh").innerText = t.refresh;
-    document.getElementById("btnDownload").innerText = t.download;
-    document.getElementById("btnUpdatePoints").innerText = t.updatePoints;
-    document.getElementById("btnLogout3").innerText = t.logout;
-  }
-
-  function normalizePhone(phone){
-    phone = String(phone).replace(/\D/g,"");
-
-    if(phone.startsWith("0")){
-      phone = "6" + phone;
-    }
-
-    if(phone.startsWith("60")){
-      return phone;
-    }
-
-    return "60" + phone;
-  }
-
-  function whatsappLink(phone, points){
-    let msg = "";
-
-    if(points !== undefined){
-      if(currentLang === "zh"){
-        msg = "您好，您的 Milk Tea Demo 会员积分目前是 " + points + " 分。谢谢。";
-      }else{
-        msg = "Hi, your Milk Tea Demo membership points are currently " + points + " points. Thank you.";
-      }
-
-      return "https://wa.me/" + normalizePhone(phone) + "?text=" + encodeURIComponent(msg);
-    }
-
-    return "https://wa.me/" + normalizePhone(phone);
-  }
-
-  function hideAll(){
-    [
-      "loginPage","registerPage","dashboardPage","staffLoginPage",
-      "staffPage","bossLoginPage","bossPage"
-    ].forEach(id => document.getElementById(id).classList.add("hidden"));
-  }
-
-  window.showRegisterPage = function(){
-    hideAll();
-    document.getElementById("registerPage").classList.remove("hidden");
-  }
-
-  window.backToLogin = function(){
-    hideAll();
-    document.getElementById("loginPage").classList.remove("hidden");
-  }
-
-  window.logout = function(){
-    hideAll();
-    document.getElementById("loginPage").classList.remove("hidden");
-  }
-
-  window.registerMember = async function(){
-    let name = document.getElementById("regName").value.trim();
-    let phone = document.getElementById("regPhone").value.trim();
-    let email = document.getElementById("regEmail").value.trim().toLowerCase();
-    let consent = document.getElementById("consentCheckbox").checked;
-
-    if(!name || !phone || !email){
-      alert(currentLang === "zh" ? "请填写全部资料" : "Please fill all information");
-      return;
-    }
-
-    if(!consent){
-      alert(currentLang === "zh" ? "请先同意资料收集用途" : "Please agree to the information collection consent");
-      return;
-    }
-
-    phone = normalizePhone(phone);
-
-    const phoneRef = doc(db, "members", phone);
-    const phoneSnap = await getDoc(phoneRef);
-
-    if(phoneSnap.exists()){
-      alert(currentLang === "zh" ? "这个电话号码已经注册过了" : "This phone number is already registered");
-      return;
-    }
-
-    const emailQuery = query(collection(db, "members"), where("email", "==", email));
-    const emailSnap = await getDocs(emailQuery);
-
-    if(!emailSnap.empty){
-      alert(currentLang === "zh" ? "这个 Email 已经注册过了" : "This email is already registered");
-      return;
-    }
-
-    await setDoc(doc(db, "members", phone), {
-      name:name,
-      phone:phone,
-      email:email,
-      points:0,
-      whatsapp:"https://wa.me/" + phone,
-      memberId:"MTD-" + Date.now(),
-      consent:true,
-      consentText: currentLang === "zh" ? text.zh.consent : text.en.consent,
-      createdAt:new Date().toLocaleString()
-    });
-
-    document.getElementById("regName").value = "";
-    document.getElementById("regPhone").value = "";
-    document.getElementById("regEmail").value = "";
-    document.getElementById("consentCheckbox").checked = false;
-
-    alert(currentLang === "zh" ? "会员注册成功" : "Member Registered Successfully!");
-    backToLogin();
-  }
-
-  window.login = async function(){
-    let phone = normalizePhone(document.getElementById("loginPhone").value);
-
-    if(!phone){
-      alert(currentLang === "zh" ? "请输入电话号码" : "Please enter phone number");
-      return;
-    }
-
-    const docRef = doc(db, "members", phone);
-    const docSnap = await getDoc(docRef);
-
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到会员" : "Member not found");
-      return;
-    }
-
-    let member = docSnap.data();
-
-    hideAll();
-    document.getElementById("dashboardPage").classList.remove("hidden");
-
-    document.getElementById("welcomeText").innerText =
-      currentLang === "zh" ? "欢迎, " + member.name : "Welcome, " + member.name;
-
-    document.getElementById("pointsText").innerText = member.points || 0;
-
-    document.getElementById("memberInfo").innerText =
-      (currentLang === "zh" ? "电话: " : "Phone: ") + member.phone +
-      "\nEmail: " + member.email +
-      "\nMember ID: " + member.memberId;
-
-    document.getElementById("memberWhatsappBtn").onclick = function(){
-      window.open(whatsappLink(member.phone, member.points || 0), "_blank");
-    }
-  }
-
-  window.showStaffLogin = function(){
-    hideAll();
-    document.getElementById("staffLoginPage").classList.remove("hidden");
-  }
-
-  window.staffLogin = function(){
-    if(document.getElementById("staffPasswordInput").value === appSettings.staffPassword){
-      hideAll();
-      document.getElementById("staffPage").classList.remove("hidden");
-    }else{
-      alert(currentLang === "zh" ? "员工密码错误" : "Wrong staff password");
-    }
-  }
-
-  window.processPoints = async function(){
-    let phone = normalizePhone(document.getElementById("customerPhone").value);
-    let action = document.getElementById("staffAction").value;
-    let amount = Number(document.getElementById("pointAmount").value);
-
-    if(!phone || !amount){
-      alert(currentLang === "zh" ? "请输入电话和数额" : "Please enter phone and amount");
-      return;
-    }
-
-    const docRef = doc(db, "members", phone);
-    const docSnap = await getDoc(docRef);
-
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
-      return;
-    }
-
-    let member = docSnap.data();
-    let currentPoints = Number(member.points || 0);
-    let changePoints = Math.floor(amount);
-    let newPoints = currentPoints;
-
-    if(action === "add"){
-      newPoints = currentPoints + changePoints;
-    }else{
-      if(currentPoints < changePoints){
-        alert(currentLang === "zh" ? "积分不足" : "Not enough points");
-        return;
-      }
-      newPoints = currentPoints - changePoints;
-    }
-
-    await updateDoc(docRef, { points:newPoints });
-
-    document.getElementById("staffResult").classList.remove("hidden");
-    document.getElementById("staffCustomerName").innerText =
-      member.name + (action === "add" ? " +" : " -") + changePoints + " points";
-
-    document.getElementById("staffCustomerPoints").innerText = newPoints;
-
-    alert(currentLang === "zh" ? "更新成功" : "Updated successfully!");
-  }
-
-  window.showBossLogin = function(){
-    hideAll();
-    document.getElementById("bossLoginPage").classList.remove("hidden");
-  }
-
-  window.bossLogin = async function(){
-    if(document.getElementById("bossPasswordInput").value === appSettings.bossPassword){
-      hideAll();
-      document.getElementById("bossPage").classList.remove("hidden");
-      await loadAllMembers();
-    }else{
-      alert(currentLang === "zh" ? "老板密码错误" : "Wrong boss password");
-    }
-  }
-
-  window.setPoints = async function(){
-    let phone = normalizePhone(document.getElementById("bossCustomerPhone").value);
-    let newPoints = Number(document.getElementById("bossNewPoints").value);
-
-    if(!phone || isNaN(newPoints)){
-      alert(currentLang === "zh" ? "请输入电话和积分" : "Please enter phone and points");
-      return;
-    }
-
-    const docRef = doc(db, "members", phone);
-    const docSnap = await getDoc(docRef);
-
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
-      return;
-    }
-
-    await updateDoc(docRef, { points:newPoints });
-    alert(currentLang === "zh" ? "积分更新成功" : "Points updated successfully!");
-    loadAllMembers();
-  }
-
-  window.loadAllMembers = async function(){
-    const querySnapshot = await getDocs(collection(db, "members"));
-    allMembers = [];
-
-    querySnapshot.forEach((docItem) => {
-      allMembers.push(docItem.data());
-    });
-
-    renderCustomerTable();
-  }
-
-  function renderCustomerTable(){
-    let html = `
-      <table>
-        <tr>
-          <th>${currentLang === "zh" ? "名字" : "Name"}</th>
-          <th>${currentLang === "zh" ? "电话" : "Phone"}</th>
-          <th>Email</th>
-          <th>${currentLang === "zh" ? "积分" : "Points"}</th>
-          <th>WhatsApp</th>
-        </tr>
-    `;
-
-    allMembers.forEach(m => {
-      html += `
-        <tr>
-          <td>${m.name || ""}</td>
-          <td>${m.phone || ""}</td>
-          <td>${m.email || ""}</td>
-          <td>${m.points || 0}</td>
-          <td><button class="wa" onclick="openWA('${m.phone}', '${m.points || 0}')">WA</button></td>
-        </tr>
-      `;
-    });
-
-    html += "</table>";
-    document.getElementById("customerTable").innerHTML = html;
-  }
-
-  window.openWA = function(phone, points){
-    window.open(whatsappLink(phone, points), "_blank");
-  }
-
-  window.downloadCSV = function(){
-    if(allMembers.length === 0){
-      alert(currentLang === "zh" ? "请先刷新顾客名单" : "Please refresh customer list first");
-      return;
-    }
-
-    let csv = "Name,Phone,Email,Points,Member ID,WhatsApp,Consent,Created At\n";
-
-    allMembers.forEach(m => {
-      csv += `"${m.name || ""}","${m.phone || ""}","${m.email || ""}","${m.points || 0}","${m.memberId || ""}","${whatsappLink(m.phone, m.points || 0)}","${m.consent || false}","${m.createdAt || ""}"\n`;
-    });
-
-    let blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-    let link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "milk-tea-demo-customers.csv";
-    link.click();
-  }
-
-  applyLanguage();
-  loadSettings();
-</script>
+</div>
 
 </body>
 </html>

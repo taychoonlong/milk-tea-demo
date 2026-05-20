@@ -6,9 +6,7 @@
   <title>Milk Tea Demo</title>
 
   <style>
-    :root{
-      --product-bg:none;
-    }
+    :root{--product-bg:none;}
 
     body{
       margin:0;
@@ -23,42 +21,71 @@
       content:"";
       position:fixed;
       inset:0;
-      background:rgba(255,255,255,0.25);
+      background:rgba(255,255,255,0.38);
       z-index:-1;
     }
 
     .container{
       max-width:520px;
       margin:25px auto;
-      background:rgba(255,255,255,0.45);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      border:1px solid rgba(255,255,255,0.35);
       padding:22px;
-      border-radius:20px;
-      box-shadow:0 8px 30px rgba(0,0,0,.15);
+      border-radius:22px;
+      box-shadow:0 8px 30px rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.45);
+      background:rgba(255,255,255,.25);
+    }
+
+    .container::before{
+      content:"";
+      position:absolute;
+      inset:-20px;
+      background-image:var(--product-bg);
+      background-size:cover;
+      background-position:center;
+      filter:blur(14px);
+      transform:scale(1.08);
+      opacity:.75;
+      z-index:0;
+    }
+
+    .container::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(255,255,255,.55);
+      z-index:0;
+    }
+
+    .container > *{
+      position:relative;
+      z-index:1;
     }
 
     .logo{
       display:block;
       max-width:130px;
       max-height:130px;
-      margin:0 auto 12px;
+      margin:0 auto 16px;
       object-fit:contain;
+      background:rgba(255,255,255,.65);
+      padding:8px;
+      border-radius:6px;
     }
 
     h1,h2{text-align:center;color:#ff9800;}
-    p{text-align:center;color:#666;}
+    p{text-align:center;color:#555;}
 
     input,select{
       width:100%;
       padding:14px;
       margin-bottom:12px;
       border-radius:10px;
-      border:1px solid rgba(255,255,255,0.6);
+      border:1px solid rgba(255,255,255,.7);
       font-size:16px;
       box-sizing:border-box;
-      background:rgba(255,255,255,0.75);
+      background:rgba(255,255,255,.78);
     }
 
     button{
@@ -66,7 +93,7 @@
       padding:14px;
       border:none;
       border-radius:10px;
-      background:#ff9800;
+      background:rgba(255,152,0,.92);
       color:white;
       font-size:16px;
       margin-bottom:10px;
@@ -74,49 +101,21 @@
       font-weight:bold;
     }
 
-    .register{background:#4caf50}
-    .staff{background:#2196f3}
-    .boss{background:#9c27b0}
+    .register{background:rgba(76,175,80,.92)}
+    .staff{background:rgba(33,150,243,.92)}
+    .boss{background:rgba(156,39,176,.92)}
     .logout{background:#777}
     .wa{background:#25D366}
     .danger{background:#e53935}
     .hidden{display:none}
 
-    .button-photo-area{
-      background-image:var(--product-bg);
-      background-size:cover;
-      background-position:center;
-      border-radius:18px;
-      padding:18px;
-      margin-top:15px;
-      box-shadow:inset 0 0 0 2000px rgba(255,255,255,0.18);
-    }
-
-    .button-photo-area button{
-      background-color:rgba(255,152,0,0.88);
-    }
-
-    .button-photo-area .register{
-      background-color:rgba(76,175,80,0.88);
-    }
-
-    .button-photo-area .staff{
-      background-color:rgba(33,150,243,0.88);
-    }
-
-    .button-photo-area .boss{
-      background-color:rgba(156,39,176,0.88);
-    }
-
     .card{
-      background:rgba(255,255,255,0.45);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
+      background:rgba(255,255,255,.55);
       padding:18px;
       border-radius:18px;
       text-align:center;
       margin:15px 0;
-      border:1px solid rgba(255,255,255,0.4);
+      border:1px solid rgba(255,255,255,.5);
     }
 
     .points{
@@ -140,13 +139,13 @@
     }
 
     th,td{
-      border:1px solid rgba(255,255,255,0.5);
+      border:1px solid rgba(255,255,255,.5);
       padding:7px;
       text-align:left;
-      background:rgba(255,255,255,0.45);
+      background:rgba(255,255,255,.55);
     }
 
-    th{background:rgba(255,255,255,0.75);}
+    th{background:rgba(255,255,255,.78);}
 
     .topbar{
       max-width:520px;
@@ -180,9 +179,6 @@
         margin:20px 10px;
         padding:20px;
       }
-      .topbar{
-        margin:10px;
-      }
     }
   </style>
 </head>
@@ -203,12 +199,10 @@
 
   <input type="text" id="loginPhone" placeholder="Customer Phone: 0123456789">
 
-  <div class="button-photo-area">
-    <button onclick="login()" id="btnCustomerLogin">Customer Login</button>
-    <button class="register" onclick="showRegisterPage()" id="btnRegister">Register Member</button>
-    <button class="staff" onclick="showStaffLogin()" id="btnStaff">Staff Panel</button>
-    <button class="boss" onclick="showBossLogin()" id="btnBoss">Boss Panel</button>
-  </div>
+  <button onclick="login()" id="btnCustomerLogin">Customer Login</button>
+  <button class="register" onclick="showRegisterPage()" id="btnRegister">Register Member</button>
+  <button class="staff" onclick="showStaffLogin()" id="btnStaff">Staff Panel</button>
+  <button class="boss" onclick="showBossLogin()" id="btnBoss">Boss Panel</button>
 </div>
 
 <div class="container hidden" id="registerPage">
@@ -221,9 +215,7 @@
 
   <label class="checkbox-row">
     <input type="checkbox" id="consentCheckbox">
-    <span id="consentText">
-      I agree to allow this business to collect and use my information for membership points and customer service purposes.
-    </span>
+    <span id="consentText">I agree to allow this business to collect and use my information for membership points and customer service purposes.</span>
   </label>
 
   <button class="register" onclick="registerMember()" id="btnSubmitRegister">Submit Register</button>
@@ -422,10 +414,7 @@
   }
 
   function applyBranding(){
-    const logoIds = [
-      "headerLogo1","headerLogo2","headerLogo3","headerLogo4",
-      "headerLogo5","headerLogo6","headerLogo7"
-    ];
+    const logoIds = ["headerLogo1","headerLogo2","headerLogo3","headerLogo4","headerLogo5","headerLogo6","headerLogo7"];
 
     logoIds.forEach(id => {
       const img = document.getElementById(id);
@@ -448,15 +437,8 @@
 
   function fileToBase64(file, maxKB){
     return new Promise((resolve, reject) => {
-      if(!file){
-        reject("No file selected");
-        return;
-      }
-
-      if(file.size > maxKB * 1024){
-        reject("File too large");
-        return;
-      }
+      if(!file){reject("No file selected"); return;}
+      if(file.size > maxKB * 1024){reject("File too large"); return;}
 
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
@@ -469,11 +451,9 @@
     try{
       const file = document.getElementById("logoUpload").files[0];
       const base64 = await fileToBase64(file, 300);
-
       appSettings.logo = base64;
       await updateDoc(doc(db, "settings", "main"), { logo:base64 });
       applyBranding();
-
       alert(currentLang === "zh" ? "Logo 上传成功" : "Logo uploaded successfully");
     }catch(e){
       alert(currentLang === "zh" ? "请选择小过 300KB 的 Logo 图片" : "Please choose a logo image under 300KB");
@@ -484,11 +464,9 @@
     try{
       const file = document.getElementById("bgUpload").files[0];
       const base64 = await fileToBase64(file, 800);
-
       appSettings.background = base64;
       await updateDoc(doc(db, "settings", "main"), { background:base64 });
       applyBranding();
-
       alert(currentLang === "zh" ? "背景图上传成功" : "Background uploaded successfully");
     }catch(e){
       alert(currentLang === "zh" ? "请选择小过 800KB 的背景图片" : "Please choose a background image under 800KB");
@@ -498,42 +476,25 @@
   window.clearBranding = async function(){
     appSettings.logo = "";
     appSettings.background = "";
-
-    await updateDoc(doc(db, "settings", "main"), {
-      logo:"",
-      background:""
-    });
-
+    await updateDoc(doc(db, "settings", "main"), {logo:"",background:""});
     applyBranding();
     alert(currentLang === "zh" ? "Logo 和背景已经清除" : "Logo and background cleared");
   }
 
   window.updateStaffPassword = async function(){
     const newPassword = document.getElementById("newStaffPassword").value.trim();
-
-    if(!newPassword){
-      alert(currentLang === "zh" ? "请输入新的员工密码" : "Please enter new staff password");
-      return;
-    }
-
+    if(!newPassword){alert(currentLang === "zh" ? "请输入新的员工密码" : "Please enter new staff password"); return;}
     appSettings.staffPassword = newPassword;
     await updateDoc(doc(db, "settings", "main"), { staffPassword:newPassword });
-
     document.getElementById("newStaffPassword").value = "";
     alert(currentLang === "zh" ? "员工密码更新成功" : "Staff password updated");
   }
 
   window.updateBossPassword = async function(){
     const newPassword = document.getElementById("newBossPassword").value.trim();
-
-    if(!newPassword){
-      alert(currentLang === "zh" ? "请输入新的老板密码" : "Please enter new boss password");
-      return;
-    }
-
+    if(!newPassword){alert(currentLang === "zh" ? "请输入新的老板密码" : "Please enter new boss password"); return;}
     appSettings.bossPassword = newPassword;
     await updateDoc(doc(db, "settings", "main"), { bossPassword:newPassword });
-
     document.getElementById("newBossPassword").value = "";
     alert(currentLang === "zh" ? "老板密码更新成功" : "Boss password updated");
   }
@@ -541,31 +502,24 @@
   window.changeLanguage = function(){
     currentLang = document.getElementById("languageSelect").value;
     applyLanguage();
-
-    if(allMembers.length > 0){
-      renderCustomerTable();
-    }
+    if(allMembers.length > 0){renderCustomerTable();}
   }
 
   function applyLanguage(){
     const t = text[currentLang];
-
     document.getElementById("subtitle").innerText = t.subtitle;
     document.getElementById("btnCustomerLogin").innerText = t.customerLogin;
     document.getElementById("btnRegister").innerText = t.register;
     document.getElementById("btnStaff").innerText = t.staff;
     document.getElementById("btnBoss").innerText = t.boss;
-
     document.getElementById("registerTitle").innerText = t.registerTitle;
     document.getElementById("btnSubmitRegister").innerText = t.submitRegister;
     document.getElementById("consentText").innerText = t.consent;
     document.getElementById("btnBackRegister").innerText = t.back;
-
     document.getElementById("memberDashboardTitle").innerText = t.memberDashboard;
     document.getElementById("currentPointsText").innerText = t.currentPoints;
     document.getElementById("memberWhatsappBtn").innerText = t.openWhatsapp;
     document.getElementById("btnLogout1").innerText = t.logout;
-
     document.getElementById("staffLoginTitle").innerText = t.staffLogin;
     document.getElementById("btnStaffLogin").innerText = t.loginStaff;
     document.getElementById("btnBack1").innerText = t.back;
@@ -574,7 +528,6 @@
     document.getElementById("btnSubmit").innerText = t.submit;
     document.getElementById("totalPointsText").innerText = t.totalPoints;
     document.getElementById("btnLogout2").innerText = t.logout;
-
     document.getElementById("bossLoginTitle").innerText = t.bossLogin;
     document.getElementById("btnBossLogin").innerText = t.loginBoss;
     document.getElementById("btnBack2").innerText = t.back;
@@ -587,39 +540,25 @@
 
   function normalizePhone(phone){
     phone = String(phone).replace(/\D/g,"");
-
-    if(phone.startsWith("0")){
-      phone = "6" + phone;
-    }
-
-    if(phone.startsWith("60")){
-      return phone;
-    }
-
+    if(phone.startsWith("0")){phone = "6" + phone;}
+    if(phone.startsWith("60")){return phone;}
     return "60" + phone;
   }
 
   function whatsappLink(phone, points){
     let msg = "";
-
     if(points !== undefined){
-      if(currentLang === "zh"){
-        msg = "您好，您的 Milk Tea Demo 会员积分目前是 " + points + " 分。谢谢。";
-      }else{
-        msg = "Hi, your Milk Tea Demo membership points are currently " + points + " points. Thank you.";
-      }
-
+      msg = currentLang === "zh"
+        ? "您好，您的 Milk Tea Demo 会员积分目前是 " + points + " 分。谢谢。"
+        : "Hi, your Milk Tea Demo membership points are currently " + points + " points. Thank you.";
       return "https://wa.me/" + normalizePhone(phone) + "?text=" + encodeURIComponent(msg);
     }
-
     return "https://wa.me/" + normalizePhone(phone);
   }
 
   function hideAll(){
-    [
-      "loginPage","registerPage","dashboardPage","staffLoginPage",
-      "staffPage","bossLoginPage","bossPage"
-    ].forEach(id => document.getElementById(id).classList.add("hidden"));
+    ["loginPage","registerPage","dashboardPage","staffLoginPage","staffPage","bossLoginPage","bossPage"]
+    .forEach(id => document.getElementById(id).classList.add("hidden"));
   }
 
   window.showRegisterPage = function(){
@@ -643,33 +582,20 @@
     let email = document.getElementById("regEmail").value.trim().toLowerCase();
     let consent = document.getElementById("consentCheckbox").checked;
 
-    if(!name || !phone || !email){
-      alert(currentLang === "zh" ? "请填写全部资料" : "Please fill all information");
-      return;
-    }
-
-    if(!consent){
-      alert(currentLang === "zh" ? "请先同意资料收集用途" : "Please agree to the information collection consent");
-      return;
-    }
+    if(!name || !phone || !email){alert(currentLang === "zh" ? "请填写全部资料" : "Please fill all information"); return;}
+    if(!consent){alert(currentLang === "zh" ? "请先同意资料收集用途" : "Please agree to the information collection consent"); return;}
 
     phone = normalizePhone(phone);
 
     const phoneRef = doc(db, "members", phone);
     const phoneSnap = await getDoc(phoneRef);
 
-    if(phoneSnap.exists()){
-      alert(currentLang === "zh" ? "这个电话号码已经注册过了" : "This phone number is already registered");
-      return;
-    }
+    if(phoneSnap.exists()){alert(currentLang === "zh" ? "这个电话号码已经注册过了" : "This phone number is already registered"); return;}
 
     const emailQuery = query(collection(db, "members"), where("email", "==", email));
     const emailSnap = await getDocs(emailQuery);
 
-    if(!emailSnap.empty){
-      alert(currentLang === "zh" ? "这个 Email 已经注册过了" : "This email is already registered");
-      return;
-    }
+    if(!emailSnap.empty){alert(currentLang === "zh" ? "这个 Email 已经注册过了" : "This email is already registered"); return;}
 
     await setDoc(doc(db, "members", phone), {
       name:name,
@@ -695,29 +621,20 @@
   window.login = async function(){
     let phone = normalizePhone(document.getElementById("loginPhone").value);
 
-    if(!phone){
-      alert(currentLang === "zh" ? "请输入电话号码" : "Please enter phone number");
-      return;
-    }
+    if(!phone){alert(currentLang === "zh" ? "请输入电话号码" : "Please enter phone number"); return;}
 
     const docRef = doc(db, "members", phone);
     const docSnap = await getDoc(docRef);
 
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到会员" : "Member not found");
-      return;
-    }
+    if(!docSnap.exists()){alert(currentLang === "zh" ? "找不到会员" : "Member not found"); return;}
 
     let member = docSnap.data();
 
     hideAll();
     document.getElementById("dashboardPage").classList.remove("hidden");
 
-    document.getElementById("welcomeText").innerText =
-      currentLang === "zh" ? "欢迎, " + member.name : "Welcome, " + member.name;
-
+    document.getElementById("welcomeText").innerText = currentLang === "zh" ? "欢迎, " + member.name : "Welcome, " + member.name;
     document.getElementById("pointsText").innerText = member.points || 0;
-
     document.getElementById("memberInfo").innerText =
       (currentLang === "zh" ? "电话: " : "Phone: ") + member.phone +
       "\nEmail: " + member.email +
@@ -747,32 +664,21 @@
     let action = document.getElementById("staffAction").value;
     let amount = Number(document.getElementById("pointAmount").value);
 
-    if(!phone || !amount){
-      alert(currentLang === "zh" ? "请输入电话和数额" : "Please enter phone and amount");
-      return;
-    }
+    if(!phone || !amount){alert(currentLang === "zh" ? "请输入电话和数额" : "Please enter phone and amount"); return;}
 
     const docRef = doc(db, "members", phone);
     const docSnap = await getDoc(docRef);
 
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
-      return;
-    }
+    if(!docSnap.exists()){alert(currentLang === "zh" ? "找不到顾客" : "Customer not found"); return;}
 
     let member = docSnap.data();
     let currentPoints = Number(member.points || 0);
     let changePoints = Math.floor(amount);
-    let newPoints = currentPoints;
+    let newPoints = action === "add" ? currentPoints + changePoints : currentPoints - changePoints;
 
-    if(action === "add"){
-      newPoints = currentPoints + changePoints;
-    }else{
-      if(currentPoints < changePoints){
-        alert(currentLang === "zh" ? "积分不足" : "Not enough points");
-        return;
-      }
-      newPoints = currentPoints - changePoints;
+    if(action === "deduct" && currentPoints < changePoints){
+      alert(currentLang === "zh" ? "积分不足" : "Not enough points");
+      return;
     }
 
     await updateDoc(docRef, { points:newPoints });
@@ -780,7 +686,6 @@
     document.getElementById("staffResult").classList.remove("hidden");
     document.getElementById("staffCustomerName").innerText =
       member.name + (action === "add" ? " +" : " -") + changePoints + " points";
-
     document.getElementById("staffCustomerPoints").innerText = newPoints;
 
     alert(currentLang === "zh" ? "更新成功" : "Updated successfully!");
@@ -805,18 +710,12 @@
     let phone = normalizePhone(document.getElementById("bossCustomerPhone").value);
     let newPoints = Number(document.getElementById("bossNewPoints").value);
 
-    if(!phone || isNaN(newPoints)){
-      alert(currentLang === "zh" ? "请输入电话和积分" : "Please enter phone and points");
-      return;
-    }
+    if(!phone || isNaN(newPoints)){alert(currentLang === "zh" ? "请输入电话和积分" : "Please enter phone and points"); return;}
 
     const docRef = doc(db, "members", phone);
     const docSnap = await getDoc(docRef);
 
-    if(!docSnap.exists()){
-      alert(currentLang === "zh" ? "找不到顾客" : "Customer not found");
-      return;
-    }
+    if(!docSnap.exists()){alert(currentLang === "zh" ? "找不到顾客" : "Customer not found"); return;}
 
     await updateDoc(docRef, { points:newPoints });
     alert(currentLang === "zh" ? "积分更新成功" : "Points updated successfully!");
@@ -826,11 +725,7 @@
   window.loadAllMembers = async function(){
     const querySnapshot = await getDocs(collection(db, "members"));
     allMembers = [];
-
-    querySnapshot.forEach((docItem) => {
-      allMembers.push(docItem.data());
-    });
-
+    querySnapshot.forEach((docItem) => {allMembers.push(docItem.data());});
     renderCustomerTable();
   }
 
